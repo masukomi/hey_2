@@ -1,0 +1,2 @@
+class DataError < Exception
+end

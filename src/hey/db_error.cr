@@ -1,0 +1,2 @@
+class DbError < Exception
+end
