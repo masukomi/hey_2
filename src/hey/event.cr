@@ -1,20 +1,21 @@
-require "./interrupt_database"
+require "granite_orm/adapter/sqlite"
+require "../granite_orm/fields.cr"
+require "../granite_orm/transactions.cr"
 
 module Hey
-	class Event 
-		# Event is a module in crystal so
-		# i can't have any Event class.
-		getter :id, :description, :created_at
-		setter :description, :created_at
+	class Event < Granite::ORM::Base
+		adapter sqlite
+		table_name events
+		no_timestamps
+		# field id : Int64
+		field description : String?
+		field created_at : String
 
-		def initialize(@id : Int32, @description : String, @created_at : Time)
+		before_create :set_created_at
+
+		def set_created_at
+			# 2017-05-26 17:33:08
+			created_at = Time.now().to_s("%Y-%m-%d %H:%M:%S")
 		end
-
-		def self.find_by_id(id : Int32) : Event
-			db = InterruptDatabase.new()
-			db.get_event_by_id(id)
-		end
-
-		
 	end
 end
