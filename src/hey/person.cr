@@ -5,7 +5,7 @@ module Hey
 		property! name : String
 		getter :id
 		
-		def initialize(@id : Int32, @name : String)
+		def initialize(@id : Int32 | Nil, @name : String)
 		end
 
 		def self.load(id : Int32) : Person
