@@ -21,7 +21,7 @@ module Granite::ORM::Table
     {% SETTINGS[:table_name] = name.id %}
   end
 
-  macro foreign_key(column)
+  macro set_foreign_key(column)
     {% SETTINGS[:foreign_key] = column.id %}
   end
 
@@ -37,7 +37,7 @@ module Granite::ORM::Table
     {% table_name = SETTINGS[:table_name] || name_space + "s" %}
     {% primary_name = PRIMARY[:name] %}
     {% primary_type = PRIMARY[:type] %}
-    {% foreign_key = SETTINGS[:foreign_key] || table_name + "id" %}
+    {% foreign_key = SETTINGS[:foreign_key] || table_name + "_id" %}
     # Table Name
     @@table_name = "{{table_name}}"
     @@primary_name = "{{primary_name}}"
