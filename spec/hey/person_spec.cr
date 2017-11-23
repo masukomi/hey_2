@@ -29,7 +29,12 @@ describe Hey::Person do
 			p.name.should(be_truthy()) #e.g. "Bob"
 		end
 	end
-
+	it "should have associated EventPerson objects" do
+		p = Hey::Person.find(1)
+		if !p.nil? 
+			(p.event_person.size > 0).should(be_true())
+		end
+	end
 	# it "should have associated events" do
 	# 	p = Hey::Person.find(1)
 	# 	if !p.nil?
