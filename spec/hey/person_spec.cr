@@ -9,6 +9,12 @@ describe Hey::Person do
 		p.name.should(eq("bob"))
 	end
 
+	it "should know its table name" do
+		# this is testing a hack to the Granite ORM because
+		# apparently that wasn't a thing
+		Hey::Person.table_name.should(eq("people"))
+	end
+
 	it "should be initializable without an id" do
 		p = Hey::Person.new(name: "bob")
 		p.should(be_truthy())
@@ -23,4 +29,14 @@ describe Hey::Person do
 			p.name.should(be_truthy()) #e.g. "Bob"
 		end
 	end
+
+	# it "should have associated events" do
+	# 	p = Hey::Person.find(1)
+	# 	if !p.nil?
+	# 		e = p.events
+	# 		e.size.should(be_truthy())
+	# 	else
+	# 		fail("expected person to have events")
+	# 	end
+	# end
 end

@@ -7,6 +7,9 @@ module Hey
 		adapter sqlite
 		table_name events
 		no_timestamps
+		# has_many :event_persons
+		# has_many :people, through: event_persons
+
 		# field id : Int64
 		field description : String?
 		field created_at : String
