@@ -9,6 +9,7 @@ module Hey
 		# field person_id : Int64
 		belongs_to person
 		# ^^ gives us a .person method
+		belongs_to event
 		# belongs_to :event
 	end
 end

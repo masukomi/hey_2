@@ -25,4 +25,11 @@ describe Hey::Event do
 		end
 		/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.should(be_truthy())
 	end
+	it "should have associated EventPerson objects" do
+		e = Hey::Event.find(1)
+		if !e.nil? 
+			(e.event_person.size > 0).should(be_true())
+		end
+	end
+
 end
