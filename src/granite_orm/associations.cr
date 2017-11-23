@@ -18,15 +18,15 @@ module Granite::ORM::Associations
     end
   end
 
-  macro owned_by(parent_class)
-    field {{parent_class.foreign_key}} : Int64
+  macro owned_by(parent_class_name)
+    field {{parent_class_name.foreign_key}} : Int64
 
     # retrieve the parent relationship
-    def {{parent_class.name.underscore}}
-      if parent = {{parent_class.name}}.find {{parent_class.foreign_key}}
+    def {{parent_class.name.underscore}} : {{parent_class_name}}?
+      if parent = {{parent_class_name}}.find {{parent_class_name}}.foreign_key
         parent
       else
-        {{parent_class.name}}.new
+        Nil
       end
     end
 
@@ -54,8 +54,8 @@ module Granite::ORM::Associations
     def {{children_class_name.id.underscore}}
       childrens_table = {{children_class_name}}.table_name
       return [] of {{children_class_name}} unless id
-      foreign_key = "#{childrens_table}.#{self.foreign_key}"
-      query = "WHERE #{foreign_key} = ?"
+      table_fk_string = "#{childrens_table}.#{@@foreign_key}"
+      query = "WHERE #{table_fk_string} = ?"
       {{children_class_name}}.all(query, id)
     end
   end
