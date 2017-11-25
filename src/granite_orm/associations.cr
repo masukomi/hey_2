@@ -18,21 +18,23 @@ module Granite::ORM::Associations
     end
   end
 
-  macro owned_by(parent_class_name)
-    field {{parent_class_name.foreign_key}} : Int64
-
+  macro owned_by(parent_class_name, column=nil)
+    {% underscored_class_name = parent_class_name.id.underscore %}
+    {% if ! column %}
+      {% column = underscored_class_name + "_id" %}
+    {% end %}
     # retrieve the parent relationship
-    def {{parent_class.name.underscore}} : {{parent_class_name}}?
-      if parent = {{parent_class_name}}.find {{parent_class_name}}.foreign_key
-        parent
+    def {{underscored_class_name}}() : {{parent_class_name}}?
+      if ! {{column}}.nil?
+        {{parent_class_name}}.find {{column}}
       else
-        Nil
+        nil
       end
     end
 
     # set the parent relationship
-    def {{model_name.id}}=(parent)
-      @{{model_name.id}}_id = parent.id
+    def {{parent_class_name.id.underscore}}=(a_person : Person)
+      self.{{column}} = a_person.id
     end
   end
 
@@ -51,11 +53,25 @@ module Granite::ORM::Associations
   end
 
   macro has_some(children_class_name)
-    def {{children_class_name.id.underscore}}
+    def {{children_class_name.id.underscore}}s
       childrens_table = {{children_class_name}}.table_name
       return [] of {{children_class_name}} unless id
       table_fk_string = "#{childrens_table}.#{@@foreign_key}"
       query = "WHERE #{table_fk_string} = ?"
+      {{children_class_name}}.all(query, id)
+    end
+  end
+
+  macro has_some(children_class_name, through)
+    def {{children_class_name.id.underscore}}s
+      childrens_table = {{children_class_name.id}}.table_name
+      through_table = {{through}}.table_name
+      return [] of {{children_class_name}} unless id
+      childrens_fk = {{children_class_name.id}}.foreign_key
+      table_fk_string = "#{childrens_table}.#{@@foreign_key}"
+      query = "JOIN #{through_table} ON " \
+              "#{through_table}.#{childrens_fk} = #{childrens_table}.id " \
+              "WHERE #{through_table}.#{@@foreign_key}= ?"
       {{children_class_name}}.all(query, id)
     end
   end

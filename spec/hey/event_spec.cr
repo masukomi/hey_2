@@ -28,8 +28,18 @@ describe Hey::Event do
 	it "should have associated EventPerson objects" do
 		e = Hey::Event.find(1)
 		if !e.nil? 
-			(e.event_person.size > 0).should(be_true())
+			(e.event_persons.size > 0).should(be_true())
 		end
 	end
+
+	it "should have associated people through EventPerson" do
+		e = Hey::Event.find(1)
+		if !e.nil? 
+			(e.event_persons.size > 0).should(be_true())
+			(e.persons.size > 0).should(be_true())
+		end
+	end
+
+	
 
 end

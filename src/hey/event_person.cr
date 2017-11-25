@@ -5,11 +5,11 @@ module Hey
 	class EventPerson < Granite::ORM::Base
 		adapter sqlite
 		table_name events_people
-		# field event_id  : Int64
-		# field person_id : Int64
-		belongs_to person
+		field event_id  : Int64
+		field person_id : Int64
+		owned_by Person #, column: person_id
 		# ^^ gives us a .person method
-		belongs_to event
-		# belongs_to :event
+		owned_by Event #, column:
+		# ^^ gives us a .event method
 	end
 end

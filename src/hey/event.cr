@@ -13,6 +13,8 @@ module Hey
 		has_some EventPerson
 		# has_many :event_persons
 		# has_many :people, through: event_persons
+		has_some Person, through: EventPerson
+		# gives us a .persons method
 
 		# field id : Int64
 		field description : String?
