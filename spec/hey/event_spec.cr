@@ -39,6 +39,13 @@ describe Hey::Event do
 			(e.persons.size > 0).should(be_true())
 		end
 	end
+	it "should have associated tags through EventTag" do
+		e = Hey::Event.find(1)
+		if !e.nil? 
+			(e.event_tags.size > 0).should(be_true())
+			(e.tags.size > 0).should(be_true())
+		end
+	end
 
 	
 

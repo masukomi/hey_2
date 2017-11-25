@@ -9,12 +9,14 @@ module Hey
 		adapter sqlite
 		table_name events
 		set_foreign_key event_id
-		no_timestamps
+		no_timestamps # because granite ORM can't handle sqlite timestamps
 		has_some EventPerson
 		# has_many :event_persons
 		# has_many :people, through: event_persons
 		has_some Person, through: EventPerson
 		# gives us a .persons method
+		has_some EventTag
+		has_some Tag, through: EventTag
 
 		# field id : Int64
 		field description : String?
