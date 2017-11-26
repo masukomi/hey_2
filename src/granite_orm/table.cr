@@ -25,6 +25,10 @@ module Granite::ORM::Table
     {% SETTINGS[:foreign_key] = column.id %}
   end
 
+  macro set_order_column(column)
+    {% SETTINGS[:order_column] = column.id %}
+  end
+
 
   # specify the primary key column and type
   macro primary(decl)
@@ -33,15 +37,16 @@ module Granite::ORM::Table
   end
 
   macro __process_table
-    {% name_space = @type.name.gsub(/::/, "_").downcase.id %}
-    {% table_name = SETTINGS[:table_name] || name_space + "s" %}
+    {% name_space   = @type.name.gsub(/::/, "_").downcase.id %}
+    {% table_name   = SETTINGS[:table_name] || name_space + "s" %}
     {% primary_name = PRIMARY[:name] %}
     {% primary_type = PRIMARY[:type] %}
-    {% foreign_key = SETTINGS[:foreign_key] || table_name + "_id" %}
+    {% foreign_key  = SETTINGS[:foreign_key] || table_name + "_id" %}
     # Table Name
     @@table_name = "{{table_name}}"
     @@primary_name = "{{primary_name}}"
     @@foreign_key = "{{foreign_key}}"
+    @@order_column = "{{SETTINGS[:order_column] || "id".id}}"
     
     def self.table_name : String
       @@table_name
