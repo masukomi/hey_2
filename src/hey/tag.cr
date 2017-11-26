@@ -15,5 +15,17 @@ module Hey
 		#    by underscoring EventTag and adding s
 
 		field name : String
+
+		def self.process_instructions(instructions : Array(String))
+			event = Event.find_by_last_or_id(instructions.first.downcase)
+			tag_strings = instructions[1..-1]
+			tags = tag_strings.map{|tag_string|
+				tag = Tag.find_by :name, tag_string.downcase
+				if !tag
+					tag = Tag.new(name: tag_string.downcase)
+				end
+			}
+			event.add_tags(tags)
+		end
 	end
 end

@@ -34,6 +34,21 @@ describe Hey::Tag do
 		end
 	end
 
-	
+	it "should process instructions" do
+		event = Hey::Event.find(2) # last
+		if !event.nil?
+			starter_tags = event.tags.map{|e| e.name}
+			starter_tags.includes?("pi_tag").should(be_false())
+			Hey::Tag.where(name: "pi_tag").count.should(eq(0))
+			Hey::Tag.where(name: "pi_tag2").count.should(eq(0))
+			Hey::Tag.process_instructions(["2", "pi_tag", "pi_tag_2"])
+			
+			event = Hey::Event.find(2)
+			if !event.nil?
+				end_tags = event.tags.map{|e| e.name}
+				(end_tags & ["pi_tag", "pi_tag_2"]).size.should(eq(2))
+			end
+		end
+	end
 
 end
