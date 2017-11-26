@@ -47,6 +47,41 @@ describe Hey::Event do
 		end
 	end
 
-	
+	it "should be able to load the last item" do
+		# extension to granite orm
+		e = Hey::Event.last()
+		if !e.nil?
+			#yay
+			e.id.should(eq(2))
+		else
+			fail("unable to find via last method")
+		end
+	end
+
+	it "should be able to find_by_last_or_id with last keyword" do
+		e = Hey::Event.find_by_last_or_id("last")
+		if !e.nil?
+			e.id.should(eq(2))
+		else
+			fail("unable to find event by last keyword")
+		end
+	end
+
+	it "should be able to find_by_last_or_id with string id" do
+		e = Hey::Event.find_by_last_or_id("2")
+		if !e.nil?
+			e.id.should(eq(2))
+		else
+			fail("unable to find event by string id")
+		end
+	end
+
+	it "should blow up find_by_last_or_id with bs id" do
+		expect_raises Exception do
+			e = Hey::Event.find_by_last_or_id("bullshit")
+		end
+	end
+
+
 
 end

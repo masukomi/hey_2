@@ -3,12 +3,14 @@ require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
 require "../granite_orm/fields.cr"
 require "../granite_orm/transactions.cr"
+require "../granite_orm/querying.cr"
 
 module Hey
 	class Event < Granite::ORM::Base
 		adapter sqlite
 		table_name events
 		set_foreign_key event_id
+		set_order_column created_at
 		no_timestamps # because granite ORM can't handle sqlite timestamps
 		has_some EventPerson
 		# has_many :event_persons
@@ -30,13 +32,13 @@ module Hey
 		end
 		
 		def self.find_by_last_or_id(identifier : String)
-			event : Event
+			event : Event?
 			if identifier == "last"
 				event = Event.last()
 			elsif identifier.match(/^\d+$/)
 				event = Event.find(identifier.to_i)
 			else
-				raise RuntimeException.new("#{identifier} is not a valid event identifier")
+				raise Exception.new("#{identifier} is not a valid event identifier")
 			end
 		end
 
