@@ -1,0 +1,5 @@
+/doc/
+/lib/
+/bin/
+/.shards/
+spec/test_copy.db
