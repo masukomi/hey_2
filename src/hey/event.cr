@@ -17,6 +17,7 @@ module Hey
 		# gives us a .persons method
 		has_some EventTag
 		has_some Tag, through: EventTag
+		# gives us a .tags method
 
 		# field id : Int64
 		field description : String?
@@ -24,9 +25,29 @@ module Hey
 
 		before_create :set_created_at
 
+		def self.list_recent(limit : Int32)
+			puts "todo: output <= #{limit} recent events"
+		end
+		
+		def self.find_by_last_or_id(identifier : String)
+			event : Event
+			if identifier == "last"
+				event = Event.last()
+			elsif identifier.match(/^\d+$/)
+				event = Event.find(identifier.to_i)
+			else
+				raise RuntimeException.new("#{identifier} is not a valid event identifier")
+			end
+		end
+
 		def set_created_at
 			# 2017-05-26 17:33:08
 			created_at = Time.now().to_s("%Y-%m-%d %H:%M:%S")
+		end
+
+		def add_tags(new_tags : Array(Tag))
+			addable = new_tags - tags
+			self.tags += addable
 		end
 	end
 end
