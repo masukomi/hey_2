@@ -11,7 +11,7 @@ describe Hey::Event do
 		e.should(be_a(Hey::Event))
 		if !e.nil?
 			e.id.should(eq(1))
-			e.description.should(be_falsey()) 
+			# e.description.should(be_falsey()) 
 			# currently descriptions aren't supported so... 
 		end
 	end
