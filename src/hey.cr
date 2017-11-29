@@ -1,9 +1,13 @@
+config = Hey::Config.load()
 require "./hey/*"
 require "./sentence_options/*"
 
 # TODO: figure out where to put all these methods
 # preferably break them down over multiple classes
 
+# todo: that'll blow up if there isn't one
+puts "db_path: #{config.db_path}"
+puts "DATABASE_URL env: #{ENV["DATABASE_URL"]}"
 
 parser = SentenceOptions::Parser.new()
 parser.add_command(
