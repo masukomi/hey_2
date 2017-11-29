@@ -14,7 +14,7 @@ module SentenceOptions
       return @name == a_command
     end
 
-    def handle(args) : Bool
+    def handle(args : Array(String)) : Bool
       @handler.call(args)
     end
   end
