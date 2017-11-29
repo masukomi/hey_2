@@ -1,7 +1,8 @@
 module SentenceOptions
   class Parser
     getter :commands
-    def initialize()
+    getter :banner
+    def initialize(@banner : String)
       @commands = Array(Command).new()
     end
     def add_command(command : Command)
@@ -12,10 +13,11 @@ module SentenceOptions
         first_arg = args.first
         @commands.each do | command | 
           if command.handles_command? first_arg
-            return command.handle (args.size > 1 ? args[0..-1] : Array(String).new())
+            return command.handle (args.size > 1 ? args[1..-1] : Array(String).new())
           end
         end
       else
+        puts @banner
         @commands.each do | command |
           puts command.description
         end
