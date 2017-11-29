@@ -8,10 +8,16 @@ module SentenceOptions
       @commands << command
     end
     def parse(args)
-      first_arg = args.first
-      @commands.each do | command | 
-        if command.handles_command? first_arg
-          return command.handle (args.size > 1 ? args[0..-1] : Array(String).new())
+      if args.size > 0
+        first_arg = args.first
+        @commands.each do | command | 
+          if command.handles_command? first_arg
+            return command.handle (args.size > 1 ? args[0..-1] : Array(String).new())
+          end
+        end
+      else
+        @commands.each do | command |
+          puts command.description
         end
       end
       return false
