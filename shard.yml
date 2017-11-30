@@ -13,6 +13,8 @@ dependencies:
       github: amberframework/granite-orm
   sqlite3:
     github: crystal-lang/crystal-sqlite3
+  sentence_options:
+    github: masukomi/sentence_options
 
 
 crystal: 0.22.0

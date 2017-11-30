@@ -1,7 +1,9 @@
 config = Hey::Config.load()
-require "./hey/*"
-require "./sentence_options/*"
-
+require "./hey/*" # no it doesn't make sense to require after using
+                  # but the oter way around doesn't work because 
+                  # it doesn't have the db info before loading up
+                  # Granite ORM subclasses.
+require "sentence_options/sentence_options"
 # TODO: figure out where to put all these methods
 # preferably break them down over multiple classes
 
@@ -29,7 +31,8 @@ parser.add_command(
 					true
 				})
 )
-parser.parse(ARGV)
+success = parser.parse(ARGV)
+STDERR.puts parser.usage unless success
 
 
 # def process_command(*args)

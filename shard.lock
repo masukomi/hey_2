@@ -8,6 +8,10 @@ shards:
     github: amberframework/granite-orm
     version: 0.7.8
 
+  sentence_options:
+    github: masukomi/sentence_options
+    commit: 4f38f6c65e1f71bbade6b6f58331870d250946f2
+
   sqlite3:
     github: crystal-lang/crystal-sqlite3
     version: 0.8.3
