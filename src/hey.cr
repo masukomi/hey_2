@@ -8,14 +8,17 @@ require "./sentence_options/*"
 # todo: that'll blow up if there isn't one
 puts "db_path: #{config.db_path}"
 puts "DATABASE_URL env: #{ENV["DATABASE_URL"]}"
+puts "==================================================================="
 
-parser = SentenceOptions::Parser.new()
+parser = SentenceOptions::Parser.new(
+"Usage: unlike many command line tools, hey uses 
+        sentence-like commands to simplify interaction.")
 parser.add_command(
 	SentenceOptions::Command.new("list",
 				
-				"  hey list [number] " \
-				"    lists recent events" \
-				"    defaults to 25",
+				"  hey list [number] 
+    lists recent events
+    defaults to 25",
 				
 				Proc(Array(String), Bool).new{ |args|
 					limit = 25
