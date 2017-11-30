@@ -60,19 +60,91 @@ module Granite::ORM::Associations
       query = "WHERE #{table_fk_string} = ?"
       {{children_class_name}}.all(query, id)
     end
+    # from has_some({{children_class_name.id}})
+    def {{children_class_name.id.underscore}}s=(new_children :
+                                                Array({{children_class_name}}))
+      # TODO: figure out how to wrap this in a transaction
+      # find existing relations
+      current_kids = {{children_class_name.id.underscore}}s
+      impending_orphans =  current_kids - new_children
+      new_kids = new_children - current_kids
+      # orphan ones who aren't in new list
+      impending_orphans.each do | kid |
+        kid.{{ SETTINGS[:foreign_key] }} = nil
+        kid.save
+      end
+
+      # add ones who are in new list
+      new_kids.each do | kid |
+        kid.{{ SETTINGS[:foreign_key] }} = self.id
+        kid.save
+      end
+      #END bit that should be in a transaction
+    end
   end
 
   macro has_some(children_class_name, through)
     def {{children_class_name.id.underscore}}s
       childrens_table = {{children_class_name.id}}.table_name
       through_table = {{through}}.table_name
-      return [] of {{children_class_name}} unless id
+      return Array({{children_class_name}}).new() unless id
       childrens_fk = {{children_class_name.id}}.foreign_key
       table_fk_string = "#{childrens_table}.#{@@foreign_key}"
       query = "JOIN #{through_table} ON " \
               "#{through_table}.#{childrens_fk} = #{childrens_table}.id " \
               "WHERE #{through_table}.#{@@foreign_key}= ?"
-      {{children_class_name}}.all(query, id)
+      {{children_class_name}}.all(query, self.id)
+    end
+    #new hotnessvvv
+    def {{children_class_name.id.underscore}}s=(new_children : Array({{children_class_name}}))
+
+      # OK so, the trick with this method is that without reflection
+      # we can never access what the foreign key of the child class is
+      # IN the macro. We can only make code that acceses it at runtime
+      # which results in more code and extra queries. :/
+
+      through_table = {{through}}.table_name
+      # find existing relations
+      query = "WHERE #{@@foreign_key} = ?"
+      current_joins = {{through}}.all(query, self.id)
+      
+      kids_foreign_key = {{children_class_name}}.foreign_key
+      # TODO: figure out how to wrap this in a transaction
+      #save the new kids so that any newly created ones will have ids
+      
+      new_children.each{|kid|kid.save}
+
+      # sadly, without .send i have to do this via another db query
+      query = "WHERE #{kids_foreign_key} in " \
+        "(#{new_children.map{|c|c.id}.compact.join(", ")}) "\
+        "and #{@@foreign_key} = ?"
+      saveable_joins = {{through}}.all(query, [self.id])
+      
+      the_doomed_joins = current_joins - saveable_joins
+      the_doomed_joins.each do |walking_dead|
+        walking_dead.destroy
+      end
+
+      kids_after_aforementioned_massacre = {{children_class_name.id.underscore}}s
+      kids_needing_a_join = new_children - kids_after_aforementioned_massacre
+      if kids_needing_a_join.size > 0
+        # have to do this in SQL not methods, because again, 
+        # we still don't know the foreign key of the kid until runtime
+        # but this'll be more efficient anyway
+        insert_statement = String.build do |str|
+          str << "insert into #{through_table} (#{@@foreign_key}, #{kids_foreign_key}) VALUES "
+          kids_needing_a_join.each_index do | idx |
+            kid = kids_needing_a_join[idx]
+            if idx > 0
+              str << ", "
+            end
+            str << "(#{self.id}, #{kid.id})"
+          end
+        end
+        EventTag.exec(insert_statement)
+      end
+      #END bit that should be in a transaction
+
     end
   end
 
