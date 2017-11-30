@@ -1,5 +1,6 @@
 require "granite_orm/adapter/sqlite"
 require "../granite_orm/associations.cr"
+# require "../granite_orm/adapter/sqlite.cr"
 
 module Hey
 	class EventTag < Granite::ORM::Base

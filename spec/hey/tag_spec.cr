@@ -1,5 +1,9 @@
 require "../spec_helper"
 describe Hey::Tag do
+
+	it "should know its table name" do
+		Hey::Tag.table_name.should(eq("tags"))
+	end
 	it "should be initializable with a name" do
 		e = Hey::Tag.new(name: "described")
 		e.should(be_a(Hey::Tag))
@@ -39,10 +43,10 @@ describe Hey::Tag do
 		if !event.nil?
 			starter_tags = event.tags.map{|e| e.name}
 			starter_tags.includes?("pi_tag").should(be_false())
-			Hey::Tag.where(name: "pi_tag").count.should(eq(0))
-			Hey::Tag.where(name: "pi_tag2").count.should(eq(0))
+			Hey::Tag.all("WHERE name = ?", ["pi_tag"]).size.should(eq(0))
+			Hey::Tag.all("WHERE name = ?", ["pi_tag2"]).size.should(eq(0))
 			Hey::Tag.process_instructions(["2", "pi_tag", "pi_tag_2"])
-			
+
 			event = Hey::Event.find(2)
 			if !event.nil?
 				end_tags = event.tags.map{|e| e.name}

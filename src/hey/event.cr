@@ -4,6 +4,7 @@ require "../granite_orm/associations.cr"
 require "../granite_orm/fields.cr"
 require "../granite_orm/transactions.cr"
 require "../granite_orm/querying.cr"
+# require "../granite_orm/adapter/sqlite.cr"
 
 module Hey
 	class Event < Granite::ORM::Base
@@ -47,9 +48,9 @@ module Hey
 			created_at = Time.now().to_s("%Y-%m-%d %H:%M:%S")
 		end
 
-		def add_tags(new_tags : Array(Tag))
+		def add_tags(new_tags : Array(Hey::Tag))
 			addable = new_tags - tags
-			self.tags += addable
+			self.tags = (self.tags + addable)
 		end
 	end
 end
