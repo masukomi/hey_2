@@ -26,7 +26,7 @@ module Hey
 
 		def self.load() : Config
 			config = Config.from_json(File.read(CONFIG_PATH))
-			if ENV["HEY_DB_PATH"].nil?
+			if ! ENV.has_key? "HEY_DB_PATH"
 				config.update_db_env(config.db_path)
 			else
 				config.update_db_env(ENV["HEY_DB_PATH"])
