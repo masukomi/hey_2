@@ -31,6 +31,8 @@ module Hey
 		
 		# Outputs a table of recent events:
 		# Example:
+		# Here are the last <limit> recent events:
+		# 
 		# ID | Who       | When                 | Tags
 		# 2. | Bob, Mary | 4/12/17 14:23        | meeting, scheduled
 		# 3. | Bob       | 4/12/17 14:26        |
@@ -49,6 +51,7 @@ module Hey
 				]
 			end
 			t = Table.new(data)
+			puts "Here are the last #{limit} recent events:\n"
 			puts t.format
 		end
 		
