@@ -15,6 +15,9 @@ dependencies:
     github: crystal-lang/crystal-sqlite3
   sentence_options:
     github: masukomi/sentence_options
+  crystal_fmt:
+    github: masukomi/crystal_fmt
+
 
 
 crystal: 0.22.0

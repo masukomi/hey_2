@@ -1,5 +1,9 @@
 version: 1.0
 shards:
+  crystal_fmt:
+    github: masukomi/crystal_fmt
+    commit: a44ed1b3baa4af7381d5ec320c9617bf1d8e1fdd
+
   db:
     github: crystal-lang/crystal-db
     version: 0.4.3
