@@ -18,14 +18,15 @@ parser = SentenceOptions::Parser.new(
 parser.add_command(
 	SentenceOptions::Command.new("list",
 								 Hey::Event.command_description(),
-								 Hey::Event.command_proc())
-)
+								 Hey::Event.command_proc()))
 parser.add_command(
 	SentenceOptions::Command.new("tag",
 								 Hey::Tag.command_description(),
-								 Hey::Tag.command_proc())
-
-)
+								 Hey::Tag.command_proc()))
+parser.add_command(
+	SentenceOptions::Command.new("tags", #plural
+								 Hey::Tag.tags_command_description(),
+								 Hey::Tag.tags_command_proc()))
 success = parser.parse(ARGV)
 STDERR.puts parser.usage unless success
 
@@ -34,8 +35,6 @@ STDERR.puts parser.usage unless success
 # 	if args.size > 0
 # 		command = args.shift
 # 		case command
-# 		when "list"
-# 			list_events(args.cdr)
 # 		when "who"
 # 			list_who(args.cdr)
 # 		when "--version", "-v"

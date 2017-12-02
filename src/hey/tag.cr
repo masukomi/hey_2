@@ -55,5 +55,28 @@ module Hey
     tags the event identified by \"last\" or its id
     with the tags that follow (space separated)"
 		end
+
+		# tags (plural) command stuff --------------------
+		def self.tags_command_proc : Proc(Array(String), Bool)
+			# hey tag <last|id> <tags list>
+			Proc(Array(String), Bool).new{ |args|
+				response = true
+				if args.size == 0
+					tags_string = Tag.all.map{|t| t.name}.compact.sort.join(", ")
+					puts "All your tags:"
+					puts tags_string
+				else
+					STDERR.puts("Usage: hey tags")
+					response = false
+				end
+				response
+			}
+		end
+		def self.tags_command_description() : String
+"  hey tags
+    lists all tags alphabetically"
+		end
+
+
 	end
 end
