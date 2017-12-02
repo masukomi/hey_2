@@ -3,7 +3,7 @@ require "./hey/*" # no it doesn't make sense to require after using
                   # but the oter way around doesn't work because 
                   # it doesn't have the db info before loading up
                   # Granite ORM subclasses.
-require "sentence_options/sentence_options"
+require "sentence_options"
 # TODO: figure out where to put all these methods
 # preferably break them down over multiple classes
 
@@ -17,19 +17,14 @@ parser = SentenceOptions::Parser.new(
         sentence-like commands to simplify interaction.")
 parser.add_command(
 	SentenceOptions::Command.new("list",
-				
-				"  hey list [number] 
-    lists recent events
-    defaults to 25",
-				
-				Proc(Array(String), Bool).new{ |args|
-					limit = 25
-					if args.size > 0
-						limit = args.first.to_i
-					end
-					Hey::Event.list_recent(limit)
-					true
-				})
+								 Hey::Event.command_description(),
+								 Hey::Event.command_proc())
+)
+parser.add_command(
+	SentenceOptions::Command.new("tag",
+								 Hey::Tag.command_description(),
+								 Hey::Tag.command_proc())
+
 )
 success = parser.parse(ARGV)
 STDERR.puts parser.usage unless success
