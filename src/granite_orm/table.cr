@@ -56,5 +56,9 @@ module Granite::ORM::Table
     end
     # Create the primary key
     property {{primary_name}} : Union({{primary_type.id}} | Nil)
+
+    def self.count() : Int64
+      self.scalar("select count(*) from {{table_name}}"){|x| x}.as(Int64)
+    end
   end
 end
