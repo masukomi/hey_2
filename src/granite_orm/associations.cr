@@ -38,8 +38,6 @@ module Granite::ORM::Associations
     end
   end
 
-
-
   macro has_many(children_table)
     def {{children_table.id}}
       {% children_class = children_table.id[0...-1].camelcase %}
@@ -63,6 +61,7 @@ module Granite::ORM::Associations
     # from has_some({{children_class_name.id}})
     def {{children_class_name.id.underscore}}s=(new_children :
                                                 Array({{children_class_name}}))
+      self.save unless self.id
       # TODO: figure out how to wrap this in a transaction
       # find existing relations
       current_kids = {{children_class_name.id.underscore}}s
@@ -97,12 +96,12 @@ module Granite::ORM::Associations
     end
     #new hotnessvvv
     def {{children_class_name.id.underscore}}s=(new_children : Array({{children_class_name}}))
-
+      self.save unless self.id
       # OK so, the trick with this method is that without reflection
       # we can never access what the foreign key of the child class is
       # IN the macro. We can only make code that acceses it at runtime
       # which results in more code and extra queries. :/
-
+      
       through_table = {{through}}.table_name
       # find existing relations
       query = "WHERE #{@@foreign_key} = ?"
@@ -118,7 +117,8 @@ module Granite::ORM::Associations
       query = "WHERE #{kids_foreign_key} in " \
         "(#{new_children.map{|c|c.id}.compact.join(", ")}) "\
         "and #{@@foreign_key} = ?"
-      saveable_joins = {{through}}.all(query, [self.id])
+
+      saveable_joins = new_children.size > 0 ? {{through}}.all(query, [self.id]) : Array({{through}}).new
       
       the_doomed_joins = current_joins - saveable_joins
       the_doomed_joins.each do |walking_dead|
