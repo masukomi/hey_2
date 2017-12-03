@@ -4,6 +4,7 @@ require "./hey/*" # no it doesn't make sense to require after using
                   # it doesn't have the db info before loading up
                   # Granite ORM subclasses.
 require "sentence_options"
+include Hey
 # TODO: figure out where to put all these methods
 # preferably break them down over multiple classes
 
@@ -27,6 +28,10 @@ parser.add_command(
 	SentenceOptions::Command.new("tags", #plural
 								 Hey::Tag.tags_command_description(),
 								 Hey::Tag.tags_command_proc()))
+parser.add_command(
+	SentenceOptions::Command.new("people",
+								 Person.people_command_description(),
+								 Person.people_command_proc()))
 success = parser.parse(ARGV)
 STDERR.puts parser.usage unless success
 
