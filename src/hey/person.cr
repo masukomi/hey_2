@@ -15,7 +15,7 @@ module Hey
 
 		field name : String
 
-		def event_counts_by_day(days_back : Int32 = 14) : Array(Int64)
+		def events_by_day(days_back : Int32) : Hash(String, Int64)
 			query = "select strftime('%Y-%m-%d', e.created_at) days, count(*)
 num_per_day 
 FROM people p 
@@ -32,7 +32,25 @@ GROUP BY days"
 					data[rs.read(String)] = rs.read(Int64)
 				end
 			end
-			data.keys.sort.map{|k| data[k]}
+		end
+		
+		def event_counts_per_day(days_back : Int32 = 14) : Array(Int64)
+			
+			data = events_by_day(days_back)
+			# if you've only had one event in the past n days 
+			# then that data will only contain 1 entry
+			# we need to calculate every day in the past <days_back>
+			# days, then iterate over that list
+			result = Array(Int64).new
+			# can't do descending ranges
+			zero = Int64.new(0)
+			(0..days_back).to_a.reverse.each do | num |
+				date_string =  num.days.ago.to_s("%Y-%m-%d")
+				result << (data.has_key?(date_string) ? data[date_string] : zero)
+			end
+			result
+			
+
 		end
 # 		def who_info()
 #
