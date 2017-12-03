@@ -17,6 +17,8 @@ dependencies:
     github: masukomi/sentence_options
   crystal_fmt:
     github: masukomi/crystal_fmt
+  sparker:
+    github: masukomi/sparker
 
 
 
