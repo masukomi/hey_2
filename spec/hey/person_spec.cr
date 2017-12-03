@@ -43,13 +43,14 @@ describe Hey::Person do
 			(p.events.size > 0).should(be_true())
 		end
 	end
-	# it "should have associated events" do
-	# 	p = Hey::Person.find(1)
-	# 	if !p.nil?
-	# 		e = p.events
-	# 		e.size.should(be_truthy())
-	# 	else
-	# 		fail("expected person to have events")
-	# 	end
-	# end
+	it "should have associated events" do
+		p = Hey::Person.find(1)
+		if !p.nil?
+			e = p.events
+			e.size.should(be_truthy())
+		else
+			fail("expected person to have events")
+		end
+	end
+
 end
