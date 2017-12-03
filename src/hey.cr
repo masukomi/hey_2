@@ -41,10 +41,6 @@ STDERR.puts parser.usage unless success
 # 			version()
 # 		when "help"
 # 			help()
-# 		when "tag"
-# 			tag(args[1], args[2..-1])
-# 		when "tags"
-# 			list_tags()
 # 		when "comment"
 # 			comment(args[1], args[2..-1].join(" "))
 # 		when "delete"
