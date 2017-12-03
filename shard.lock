@@ -14,11 +14,11 @@ shards:
 
   sentence_options:
     github: masukomi/sentence_options
-    commit: 4f38f6c65e1f71bbade6b6f58331870d250946f2
+    commit: 82551e4c4a8db6c9ac1d0f227c9b9ce34fedfcae
 
   sparker:
     github: masukomi/sparker
-    commit: 43a2233f9a2e048ece42f2d7bbe81037ea0c5222
+    commit: 1e131dd789739844dd23ceee9f78e134fb22963e
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
