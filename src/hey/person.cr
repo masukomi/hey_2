@@ -58,7 +58,7 @@ GROUP BY days"
 		end
 		
 		def self.people_info() : Array(Array(String|Nil))
-			sparker = Sparker.new()
+			sparker = Sparker.new(Hey::SPARK_TICKS)
 			peeps = Person.all("ORDER BY name ASC") # default sorted by name
 			query = "select p.id, t.name
 from people p
