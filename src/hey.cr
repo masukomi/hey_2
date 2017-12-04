@@ -32,8 +32,18 @@ parser.add_command(
 	SentenceOptions::Command.new("people",
 								 Person.people_command_description(),
 								 Person.people_command_proc()))
-success = parser.parse(ARGV)
-STDERR.puts parser.usage unless success
+if ENV["IN_SPEC_TEST"] != "true"
+	if ARGV.size == 0
+		STDERR.puts parser.usage 
+		exit 1
+	end
+	success = parser.parse(ARGV)
+	if ! success
+		# they're trying to create an event with a person's name
+		
+	end
+end
+
 
 
 # def process_command(*args)
