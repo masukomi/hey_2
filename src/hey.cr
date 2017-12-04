@@ -32,7 +32,7 @@ parser.add_command(
 	SentenceOptions::Command.new("people",
 								 Person.people_command_description(),
 								 Person.people_command_proc()))
-if ENV["IN_SPEC_TEST"] != "true"
+if ! ENV.has_key? "IN_SPEC_TEST"
 	if ARGV.size == 0
 		STDERR.puts parser.usage 
 		exit 1
