@@ -56,8 +56,7 @@ GROUP BY days"
 		
 		def self.people_info() : Array(Array(String|Nil))
 			sparker = Sparker.new()
-			peeps = Person.all # default sorted by name
-
+			peeps = Person.all("ORDER BY name ASC") # default sorted by name
 			query = "select p.id, t.name
 from people p
 inner join events_people ep on ep.person_id = p.id
@@ -71,7 +70,10 @@ order by p.name, ep.event_id;"
 					if !person_to_tags.has_key? pid
 						person_to_tags[pid] = Set(String).new 
 					end
-					person_to_tags[pid] << rs.read(String)
+					begin 
+						person_to_tags[pid] << rs.read(String)
+					rescue
+					end
 				end
 			end
 
@@ -83,6 +85,29 @@ order by p.name, ep.event_id;"
 				data << [p.name, sparkline, tags]
 			end
 			data
+		end
+
+		def self.find_or_create_from_names(names : Array(String)) : Array(Person)
+			sql_names = prep_array_for_sql(names)
+			all_supplied_query = "where name in (#{sql_names})"
+			existing = Person.all(all_supplied_query).index_by{|p|p.name}
+			insertable = names - existing.keys
+
+			if insertable.size > 0
+				insert = String.build do |str|
+					str << "insert into people (name) values "
+					insertable.each_with_index do |name, idx | 
+						if idx > 0
+							str << ", "
+						end
+						str << "('"
+						str << sanitize_string_for_sql(name)
+						str << "')"
+					end
+				end
+				Person.exec(insert)
+			end
+			Person.all(all_supplied_query)
 		end
 
 		#-------------------------
