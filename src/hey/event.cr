@@ -37,7 +37,7 @@ module Hey
 		# 2. | Bob, Mary | 4/12/17 14:23        | meeting, scheduled
 		# 3. | Bob       | 4/12/17 14:26        |
 		# 4. | Sam       | 4/12/17 16:11        | question 
-		# 5. | Mary      | 4/12/18 09:22        | task list
+			# 5. | Mary      | 4/12/18 09:22        | task list
 		def self.list_recent(limit : Int32 = 25)
 			recent = Event.all("ORDER BY #{@@order_column} LIMIT #{limit}")
 			data =  Array(Array(String|Nil)).new
@@ -65,7 +65,6 @@ module Hey
 				raise Exception.new("#{identifier} is not a valid event identifier")
 			end
 		end
-
 		def set_created_at
 			# 2017-05-26 17:33:08
 			self.created_at = Time.now().to_s("%Y-%m-%d %H:%M:%S")
@@ -111,5 +110,35 @@ module Hey
      lists recent events
      defaults to 25"
 		end
+
+		#----------------------------------
+		def self.create_for(people : Array(Person), tags : Array(Tag)) : Event
+			e = Event.new()
+			e.persons = people
+			e.tags = tags
+			e
+		end
+		def self.create_from_args(args) : Event
+			names = Array(String).new
+			tags = Array(String).new
+			tags_arg = false
+			args.map{|a|a.downcase}.each do |arg|
+				if arg == "+" || arg == "tag"
+					if (names.size > 0)
+						tags_arg = true
+					else
+						STDERR.puts("you must specify names for the event before tags" )
+					end
+				elsif !tags_arg
+					names << arg
+				else
+					tags << arg
+				end
+			end
+			people = Person.find_or_create_with(names)
+			tags = Tag.find_or_create_with(tags)
+			create_for(people, tags)
+		end
+
 	end
 end
