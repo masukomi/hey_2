@@ -1,12 +1,15 @@
 require "granite_orm/adapter/sqlite"
 require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
+require "../granite_orm/querying.cr"
 module Hey
 	class Person < Granite::ORM::Base
+		include Granite::ORM::Querying # dunno why this one needs to be included
 		adapter sqlite
 		table_name people
 		set_foreign_key person_id
 		set_order_column name
+		find_or_creatable Person, name
 		has_some EventPerson
 		# ^^ gives us an event_persons method (<class_name>.underscore + s)
 		#    by underscoring EventPerson and adding s
@@ -87,28 +90,6 @@ order by p.name, ep.event_id;"
 			data
 		end
 
-		def self.find_or_create_from_names(names : Array(String)) : Array(Person)
-			sql_names = prep_array_for_sql(names)
-			all_supplied_query = "where name in (#{sql_names})"
-			existing = Person.all(all_supplied_query).index_by{|p|p.name}
-			insertable = names - existing.keys
-
-			if insertable.size > 0
-				insert = String.build do |str|
-					str << "insert into people (name) values "
-					insertable.each_with_index do |name, idx | 
-						if idx > 0
-							str << ", "
-						end
-						str << "('"
-						str << sanitize_string_for_sql(name)
-						str << "')"
-					end
-				end
-				Person.exec(insert)
-			end
-			Person.all(all_supplied_query)
-		end
 
 		#-------------------------
 		def self.people_command_proc : Proc(Array(String), Bool)

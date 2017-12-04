@@ -1,11 +1,15 @@
 require "granite_orm/adapter/sqlite"
 require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
+require "../granite_orm/querying.cr"
 module Hey
 	class Tag < Granite::ORM::Base
+		include Granite::ORM::Querying # dunno why this one needs to be included
+		# but we need it for find_or_createable
 		adapter sqlite
 		table_name tags
 		set_foreign_key tag_id
+		find_or_creatable Tag, name
 		# no_timestamps
 		has_some EventTag
 		# ^^ gives us an event_persons method (<class_name>.underscore + s)

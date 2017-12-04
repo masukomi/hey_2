@@ -30,28 +30,28 @@ describe Hey::Person do
 			p.name.should(be_truthy()) #e.g. "Bob"
 		end
 	end
-	it "find_or_create_from_names should not create dupes" do
+	it "find_or_create_with should not create dupes" do
 		existing = Person.all()
 		existing_names = existing.map{|p|p.name}.compact
 		(existing_names.size > 0).should(be_true())
 		current_number = Person.count()
-		newish_people = Person.find_or_create_from_names(existing_names)
+		newish_people = Person.find_or_create_with(existing_names)
 		newish_people.size.should(eq(current_number))
 	end
-	it "find_or_create_from_names should only create needed" do
+	it "find_or_create_with should only create needed" do
 		existing = Person.all()
 		existing_names = existing.map{|p|p.name}.compact
 		(existing_names.size > 0).should(be_true())
 		current_number = Person.count()
 		test_name = "tester-#{Random.new.next_int}"
-		newish_people = Person.find_or_create_from_names(existing_names + [test_name])
+		newish_people = Person.find_or_create_with(existing_names + [test_name])
 		newish_people.size.should(eq(current_number + 1))
 		newish_people.map{|x|x.name}.includes?(test_name).should(be_true())
 	end
 
-	it "find_or_create_from_names should only return supplied folks" do
+	it "find_or_create_with should only return supplied folks" do
 		test_name = "tester-#{Random.new.next_int}"
-		newish_people = Person.find_or_create_from_names([test_name])
+		newish_people = Person.find_or_create_with([test_name])
 		newish_people.size.should(eq(1))
 		newish_people.map{|x|x.name}.includes?(test_name).should(be_true())
 
