@@ -141,7 +141,7 @@ module Granite::ORM::Associations
             str << "(#{self.id}, #{kid.id})"
           end
         end
-        EventTag.exec(insert_statement)
+        {{through}}.exec(insert_statement)
       end
       #END bit that should be in a transaction
 
