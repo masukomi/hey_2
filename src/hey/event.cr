@@ -28,15 +28,15 @@ module Hey
 		field created_at : String
 
 		before_create :set_created_at
-		
+
 		# Outputs a table of recent events:
 		# Example:
 		# Here are the last <limit> recent events:
-		# 
+		#
 		# ID | Who       | When                 | Tags
 		# 2. | Bob, Mary | 4/12/17 14:23        | meeting, scheduled
 		# 3. | Bob       | 4/12/17 14:26        |
-		# 4. | Sam       | 4/12/17 16:11        | question 
+		# 4. | Sam       | 4/12/17 16:11        | question
 			# 5. | Mary      | 4/12/18 09:22        | task list
 		def self.list_recent(limit : Int32 = 25)
 			recent = Event.all("ORDER BY #{@@order_column} LIMIT #{limit}")
@@ -54,7 +54,7 @@ module Hey
 			puts "Here are the last #{limit} recent events:\n"
 			puts t.format
 		end
-		
+
 		def self.find_by_last_or_id(identifier : String) : Event?
 			event : Event?
 			if identifier == "last"
@@ -95,7 +95,7 @@ module Hey
 			end
 		end
 		#-----------------------------------
-		def self.command_proc() : Proc(Array(String), Bool)
+		def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
 			Proc(Array(String), Bool).new{ |args|
 					limit = 25
 					if args.size > 0
@@ -106,7 +106,7 @@ module Hey
 				}
 		end
 		def self.command_description() : String
-"  hey list [number] 
+"  hey list [number]
      lists recent events
      defaults to 25"
 		end

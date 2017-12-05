@@ -39,7 +39,7 @@ module Hey
 		end
 
 		#-------------------------------------------------
-		def self.command_proc : Proc(Array(String), Bool)
+		def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
 			# hey tag <last|id> <tags list>
 			Proc(Array(String), Bool).new{ |args|
 				response = true
@@ -61,7 +61,7 @@ module Hey
 		end
 
 		# tags (plural) command stuff --------------------
-		def self.tags_command_proc : Proc(Array(String), Bool)
+		def self.tags_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
 			# hey tag <last|id> <tags list>
 			Proc(Array(String), Bool).new{ |args|
 				response = true
