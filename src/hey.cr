@@ -16,7 +16,7 @@ puts "==================================================================="
 
 parser = SentenceOptions::Parser.new(
   "Usage: unlike many command line tools, hey uses
-        sentence-like commands to simplify interaction.")
+        sentence-like commands to simplify interaction.\n")
 parser.add_command(
   SentenceOptions::Command.new("list",
     Hey::Event.command_description,
@@ -35,8 +35,18 @@ parser.add_command(
     Report.command_proc(config)))
 parser.add_command(
   SentenceOptions::Command.new("--version",
-                               "Outputs the current version number",
+"  hey --version
+    Outputs the current version number",
     Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION}"; true }))
+
+
+
+
+# should be last.
+parser.add_command(SentenceOptions::Command.new("help",
+"  hey help
+    Outputs this usage info",
+                                                Proc(Array(String), Bool).new {|args| puts parser.usage; true }))
 
 if !ENV.has_key? "IN_SPEC_TEST"
   if ARGV.size == 0
@@ -57,12 +67,6 @@ end
 # 	if args.size > 0
 # 		command = args.shift
 # 		case command
-# 		when "who"
-# 			list_who(args.cdr)
-# 		when "--version", "-v"
-# 			version()
-# 		when "help"
-# 			help()
 # 		when "comment"
 # 			comment(args[1], args[2..-1].join(" "))
 # 		when "delete"
