@@ -39,7 +39,7 @@ module Hey
     # 4. | Sam       | 4/12/17 16:11        | question
     # 5. | Mary      | 4/12/18 09:22        | task list
     def self.list_recent(limit : Int32 = 25)
-      recent = Event.all("ORDER BY #{@@order_column} LIMIT #{limit}")
+      recent = Event.all("ORDER BY #{@@order_column} DESC LIMIT #{limit}")
       data = Array(Array(String | Nil)).new
       data << ["ID", "Who", "When", "Tags"]
       recent.each do |event|
