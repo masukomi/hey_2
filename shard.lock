@@ -18,7 +18,7 @@ shards:
 
   sparker:
     github: masukomi/sparker
-    commit: 1e131dd789739844dd23ceee9f78e134fb22963e
+    version: 0.3.0
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
