@@ -1,9 +1,9 @@
-config = Hey::Config.load()
+config = Hey::Config.load
 config.running_hey
 require "./hey/*" # no it doesn't make sense to require after using
-                  # but the oter way around doesn't work because
-                  # it doesn't have the db info before loading up
-                  # Granite ORM subclasses.
+# but the oter way around doesn't work because
+# it doesn't have the db info before loading up
+# Granite ORM subclasses.
 require "sentence_options"
 include Hey
 # TODO: figure out where to put all these methods
@@ -15,41 +15,39 @@ puts "DATABASE_URL env: #{ENV["DATABASE_URL"]}"
 puts "==================================================================="
 
 parser = SentenceOptions::Parser.new(
-"Usage: unlike many command line tools, hey uses
+  "Usage: unlike many command line tools, hey uses
         sentence-like commands to simplify interaction.")
 parser.add_command(
-	SentenceOptions::Command.new("list",
-								 Hey::Event.command_description(),
-								 Hey::Event.command_proc(config)))
+  SentenceOptions::Command.new("list",
+    Hey::Event.command_description,
+    Hey::Event.command_proc(config)))
 parser.add_command(
-	SentenceOptions::Command.new("tag",
-								 Hey::Tag.command_description(),
-								 Hey::Tag.command_proc(config)))
+  SentenceOptions::Command.new("tag",
+    Hey::Tag.command_description,
+    Hey::Tag.command_proc(config)))
 parser.add_command(
-	SentenceOptions::Command.new("tags", #plural
-								 Hey::Tag.tags_command_description(),
-								 Hey::Tag.tags_command_proc(config)))
+  SentenceOptions::Command.new("tags", # plural
+    Hey::Tag.tags_command_description,
+    Hey::Tag.tags_command_proc(config)))
 # parser.add_command(
 # 	SentenceOptions::Command.new("people",
 # 								 Person.people_command_description(),
 # 								 Person.people_command_proc(config)))
 parser.add_command(
-	SentenceOptions::Command.new("report",
-								 Report.command_description(),
-								 Report.command_proc(config)))
-if ! ENV.has_key? "IN_SPEC_TEST"
-	if ARGV.size == 0
-		STDERR.puts parser.usage
-		exit 1
-	end
-	success = parser.parse(ARGV)
-	if ! success
-		# they're trying to create an event with a person's name
+  SentenceOptions::Command.new("report",
+    Report.command_description,
+    Report.command_proc(config)))
+if !ENV.has_key? "IN_SPEC_TEST"
+  if ARGV.size == 0
+    STDERR.puts parser.usage
+    exit 1
+  end
+  success = parser.parse(ARGV)
+  if !success
+    # they're trying to create an event with a person's name
 
-	end
+  end
 end
-
-
 
 # def process_command(*args)
 # 	if args.size > 0

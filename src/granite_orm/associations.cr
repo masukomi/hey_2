@@ -18,9 +18,9 @@ module Granite::ORM::Associations
     end
   end
 
-  macro owned_by(parent_class_name, column=nil)
+  macro owned_by(parent_class_name, column = nil)
     {% underscored_class_name = parent_class_name.id.underscore %}
-    {% if ! column %}
+    {% if !column %}
       {% column = underscored_class_name + "_id" %}
     {% end %}
     # retrieve the parent relationship
@@ -101,16 +101,16 @@ module Granite::ORM::Associations
       # we can never access what the foreign key of the child class is
       # IN the macro. We can only make code that acceses it at runtime
       # which results in more code and extra queries. :/
-      
+
       through_table = {{through}}.table_name
       # find existing relations
       query = "WHERE #{@@foreign_key} = ?"
       current_joins = {{through}}.all(query, self.id)
-      
+
       kids_foreign_key = {{children_class_name}}.foreign_key
       # TODO: figure out how to wrap this in a transaction
       #save the new kids so that any newly created ones will have ids
-      
+
       new_children.each{|kid|kid.save}
 
       # sadly, without .send i have to do this via another db query
@@ -119,7 +119,7 @@ module Granite::ORM::Associations
         "and #{@@foreign_key} = ?"
 
       saveable_joins = new_children.size > 0 ? {{through}}.all(query, [self.id]) : Array({{through}}).new
-      
+
       the_doomed_joins = current_joins - saveable_joins
       the_doomed_joins.each do |walking_dead|
         walking_dead.destroy
@@ -128,7 +128,7 @@ module Granite::ORM::Associations
       kids_after_aforementioned_massacre = {{children_class_name.id.underscore}}s
       kids_needing_a_join = new_children - kids_after_aforementioned_massacre
       if kids_needing_a_join.size > 0
-        # have to do this in SQL not methods, because again, 
+        # have to do this in SQL not methods, because again,
         # we still don't know the foreign key of the kid until runtime
         # but this'll be more efficient anyway
         insert_statement = String.build do |str|
@@ -148,7 +148,6 @@ module Granite::ORM::Associations
     end
   end
 
-  
   # define getter for related children
   macro has_many(children_table, through)
     def {{children_table.id}}

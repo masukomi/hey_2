@@ -1,13 +1,13 @@
 module Hey
   class Report
     JSON.mapping(
-        name: String,
-        description: String,
-        db_version: String,
-        location: {type: String, nilable: true},
-      )
+      name: String,
+      description: String,
+      db_version: String,
+      location: {type: String, nilable: true},
+    )
 
-    def run(db_path : String|Nil)
+    def run(db_path : String | Nil)
       cli_string = "#{location} -d #{db_path}"
       response = `#{cli_string}`
       puts response
@@ -53,13 +53,13 @@ module Hey
           puts "NONE: no report generators were found in #{reports_dir}"
         end
       else
-          STDERR.puts("reports directory does not exist. Please create it
+        STDERR.puts("reports directory does not exist. Please create it
 at #{reports_dir} and add some reports")
       end
     end
 
     private def self.format_description(description) : String
-      response = String.build{|str|
+      response = String.build { |str|
         description.split("\n").each do |d|
           str << "\t"
           str << d
@@ -68,30 +68,30 @@ at #{reports_dir} and add some reports")
       }
     end
 
-    #-----------------------------------
+    # -----------------------------------
     def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
-      Proc(Array(String), Bool).new{ |args|
-          reports_dir = config.reports_dir()
-          if args.size > 0
-            report_name = args[0].downcase
-            reports = Report.load_reports(reports_dir)
-            reports.each do |r|
-              if r.name == report_name
-                r.run(config.db_path)
-                break
-              end
+      Proc(Array(String), Bool).new { |args|
+        reports_dir = config.reports_dir
+        if args.size > 0
+          report_name = args[0].downcase
+          reports = Report.load_reports(reports_dir)
+          reports.each do |r|
+            if r.name == report_name
+              r.run(config.db_path)
+              break
             end
-          else
-            Report.list_reports(reports_dir)
           end
-          true
-        }
+        else
+          Report.list_reports(reports_dir)
+        end
+        true
+      }
     end
-    def self.command_description() : String
-"  hey report [report_name]
+
+    def self.command_description : String
+      "  hey report [report_name]
      lists available reports
      or runs them when specified"
     end
-
   end
 end

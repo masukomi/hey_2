@@ -4,8 +4,8 @@ module Granite::ORM::Querying
   end
 
   def prep_array_for_sql(strings : Array(String)) : String
-    String.build do | str |
-      strings.each_with_index do |string, idx |
+    String.build do |str|
+      strings.each_with_index do |string, idx|
         if idx > 0
           str << ", "
         end
@@ -15,9 +15,11 @@ module Granite::ORM::Querying
       end
     end
   end
+
   def last(clause = "", params = [] of DB::Any)
     all([clause.strip, "ORDER BY #{@@order_column} DESC LIMIT 1"].join(" "), params).first?
   end
+
   macro find_or_creatable(class_name, column_name)
     def self.find_or_create_with({{column_name.id}}s : Array(String)) : Array({{class_name.id}})
       sql_names = prep_array_for_sql(names)
@@ -28,7 +30,7 @@ module Granite::ORM::Querying
       if insertable.size > 0
         insert = String.build do |str|
           str << "insert into #{@@table_name} (name) values "
-          insertable.each_with_index do |name, idx | 
+          insertable.each_with_index do |name, idx |
             if idx > 0
               str << ", "
             end

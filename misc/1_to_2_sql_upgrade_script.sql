@@ -27,3 +27,8 @@ CREATE TABLE `events_people` (
 insert into events_people (person_id, event_id) select person_id, event_id from et_2 where et_2.event_id in (select id from events) and et_2.person_id in (select id from people);
 
 drop table events_people_orig;
+
+CREATE TABLE `versions` (
+	`version`	TEXT NOT NULL UNIQUE
+);
+insert into versions (version) values ('2.0.0');
