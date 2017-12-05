@@ -96,32 +96,6 @@ module Hey
       end
     end
 
-    # -----------------------------------
-    def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
-      Proc(Array(String), Bool).new { |args|
-        limit = 25
-        if args.size > 0
-          limit = args.first.to_i
-        end
-        Event.list_recent(limit)
-        true
-      }
-    end
-
-    def self.command_description : String
-      "  hey list [number]
-     lists recent events
-     defaults to 25"
-    end
-
-    # ----------------------------------
-    def self.create_for(people : Array(Person), tags : Array(Tag)) : Event
-      e = Event.new
-      e.persons = people
-      e.tags = tags
-      e
-    end
-
     def self.create_from_args(args) : Event
       names = Array(String).new
       tags = Array(String).new
@@ -143,5 +117,33 @@ module Hey
       tags = Tag.find_or_create_with(tags)
       create_for(people, tags)
     end
+
+    def self.create_for(people : Array(Person), tags : Array(Tag)) : Event
+      e = Event.new
+      e.persons = people
+      e.tags = tags
+      e
+    end
+
+    # -----------------------------------
+    def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      Proc(Array(String), Bool).new { |args|
+        limit = 25
+        if args.size > 0
+          limit = args.first.to_i
+        end
+        Event.list_recent(limit)
+        true
+      }
+    end
+
+    def self.command_description : String
+      "  hey list [number]
+     lists recent events
+     defaults to 25"
+    end
+
+    # ----------------------------------
+
   end
 end
