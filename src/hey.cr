@@ -33,6 +33,10 @@ parser.add_command(
   SentenceOptions::Command.new("report",
     Report.command_description,
     Report.command_proc(config)))
+parser.add_command(
+  SentenceOptions::Command.new("--version",
+                               "Outputs the current version number",
+    Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION}"; true }))
 
 if !ENV.has_key? "IN_SPEC_TEST"
   if ARGV.size == 0
