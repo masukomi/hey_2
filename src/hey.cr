@@ -77,8 +77,6 @@ end
 # 		case command
 # 		when "comment"
 # 			comment(args[1], args[2..-1].join(" "))
-# 		when "kill"
-# 			kill(args[1], args[2..-1])
 # 		when "graph"
 # 			graph(args[1..-1])
 # 		else
