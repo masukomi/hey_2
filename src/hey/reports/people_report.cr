@@ -87,7 +87,7 @@ interacted with, their recent activity, and tags."
     end
   }
 end
-if !ENV.has_key?("RUNNING_HEY")
+if File.basename(PROGRAM_NAME) == "people_report"
   parser.parse(ARGV)
   if !handled
     STDERR.puts("Arguments didn't provide expected data")
