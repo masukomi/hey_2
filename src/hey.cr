@@ -34,14 +34,18 @@ parser.add_command(
     Report.command_description,
     Report.command_proc(config)))
 parser.add_command(
+  SentenceOptions::Command.new("delete",
+    Hey::Event.delete_command_description,
+    Hey::Event.delete_command_proc(config)))
+
+
+
+
+parser.add_command(
   SentenceOptions::Command.new("--version",
 "  hey --version
     Outputs the current version number",
     Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION}"; true }))
-
-
-
-
 # should be last.
 parser.add_command(SentenceOptions::Command.new("help",
 "  hey help
@@ -69,8 +73,6 @@ end
 # 		case command
 # 		when "comment"
 # 			comment(args[1], args[2..-1].join(" "))
-# 		when "delete"
-# 			delete_entry(args[1])
 # 		when "kill"
 # 			kill(args[1], args[2..-1])
 # 		when "graph"

@@ -144,6 +144,53 @@ module Hey
     end
 
     # ----------------------------------
+    def self.delete_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      Proc(Array(String), Bool).new { |args|
+        response = true
+        if args.size > 0
+          events = args.map{ |arg|
+            lid = arg.downcase
+            e = Event.find_by_last_or_id(lid)
+            if ! e
+              STDERR.puts "Unable to find event with this identifier: #{lid}"
+              nil
+            else
+              e
+            end
+          }.compact.uniq
+          
+          if events.size > 0
+            events.each do | e |
+              # yes, this is many slow deletes
+              # realistically it's going to like 1-5 so I don't care.
+              e.destroy
+            end
+            # for humor
+            insertion = ""
+            if events.size == 1
+              insertion = events.first.id.to_s
+            else
+              insertion = "them"
+            end
+            puts "We shall never speak of #{insertion} again."
+
+          else
+            STDERR.puts "Well, that didn't work out..." 
+            response = false
+          end
+        end
+        response
+      }
+    end
+
+    def self.delete_command_description : String
+      "  hey delete <last or id>
+     deletes the event specified by 
+     \"last\" or an id"
+    end
+
+
+    # ----------------------------------
 
   end
 end
