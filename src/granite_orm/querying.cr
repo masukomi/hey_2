@@ -15,6 +15,16 @@ module Granite::ORM::Querying
       end
     end
   end
+  def prep_array_for_sql(ints : Array(Int64)) : String
+    String.build do |str|
+      ints.each_with_index do |int, idx|
+        if idx > 0
+          str << ", "
+        end
+        str << int
+      end
+    end
+  end
 
   def last(clause = "", params = [] of DB::Any)
     all([clause.strip, "ORDER BY #{@@order_column} DESC LIMIT 1"].join(" "), params).first?
