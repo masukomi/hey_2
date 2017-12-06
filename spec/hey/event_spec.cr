@@ -26,6 +26,7 @@ describe Hey::Event do
     created.nil?.should(be_false())
     if created
       (created == "").should(be_false())
+      # SQLite3::DATE_FORMAT
       /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.match(created).should(be_truthy())
     end
   end

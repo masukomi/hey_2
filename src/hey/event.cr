@@ -5,6 +5,7 @@ require "../granite_orm/fields.cr"
 require "../granite_orm/transactions.cr"
 require "../granite_orm/querying.cr"
 # require "../granite_orm/adapter/sqlite.cr"
+require "sqlite3"
 require "crystal_fmt"
 
 module Hey
@@ -68,7 +69,8 @@ module Hey
 
     def set_created_at
       # 2017-05-26 17:33:08
-      self.created_at = Time.now.to_s("%Y-%m-%d %H:%M:%S")
+      self.created_at = Time.now.to_s(SQLite3::DATE_FORMAT)
+      
     end
 
     def add_tags(new_tags : Array(Hey::Tag))
