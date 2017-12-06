@@ -57,5 +57,67 @@ GROUP BY days"
       end
       data
     end
+
+    def erase
+      event_ids_query = "select e.id, 
+      ( select count(*) from events_people where events_people.event_id = e.id) epc
+      from
+      events e 
+      inner join events_people ep on ep.event_id = e.id
+      inner join people p on ep.person_id = p.id
+      where epc = 1
+      and p.id = ?
+      group by 1;"
+      eids = Array(Int64).new
+      Event.query(event_ids_query, [self.id]) do |rs|
+        rs.each do
+          eids << rs.read(Int64)
+        end
+      end
+      Event.exec("delete from events where id in (#{prep_array_for_sql(eids)})")
+      self.destroy
+    end
+    # ----------------------------------
+    def self.kill_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      Proc(Array(String), Bool).new { |args|
+        response = true
+        if args.size > 0
+          people = args.map{ |arg|
+            name = arg.downcase
+            p = Person.find_by(:name, name)
+            if ! p
+              STDERR.puts "Unable to find person with this name: #{name}"
+              nil
+            else
+              p
+            end
+          }.compact.uniq
+          
+          if people.size > 0
+            people.each do | p |
+              # yes, this is many slow deletes
+              # realistically it's going to like 1-5 so I don't care.
+              p.erase
+            end
+            if people.size == 1
+              name = people.first.name
+              puts "#{name} is dead! Long live #{name}!"
+            else
+              puts "We shall never speak of them again."
+            end
+          else
+            STDERR.puts "Well, that didn't work out..." 
+            response = false
+          end
+        end
+        response
+      }
+    end
+
+    def self.kill_command_description : String
+      "  hey kill <name>
+     kills the specified person (not really) 
+     and removes all events that only involved them."
+    end
   end
 end

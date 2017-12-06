@@ -37,6 +37,10 @@ parser.add_command(
   SentenceOptions::Command.new("delete",
     Hey::Event.delete_command_description,
     Hey::Event.delete_command_proc(config)))
+parser.add_command(
+  SentenceOptions::Command.new("kill",
+    Hey::Person.kill_command_description,
+    Hey::Person.kill_command_proc(config)))
 
 
 
