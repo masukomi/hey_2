@@ -1,16 +1,20 @@
 version: 1.0
 shards:
+  crystal-cli_graph:
+    path: ~/workspace/crystal_cli_graph/
+    version: 0
+
   crystal_fmt:
     github: masukomi/crystal_fmt
-    commit: a44ed1b3baa4af7381d5ec320c9617bf1d8e1fdd
+    version: 0.3.1
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.4.3
+    version: 0.5.0
 
   granite_orm:
     github: amberframework/granite-orm
-    version: 0.7.8
+    version: 0.8.1
 
   sentence_options:
     github: masukomi/sentence_options
@@ -22,5 +26,5 @@ shards:
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    version: 0.8.3
+    version: 0.9.0
 

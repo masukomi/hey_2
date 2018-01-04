@@ -19,6 +19,8 @@ dependencies:
     github: masukomi/crystal_fmt
   sparker:
     github: masukomi/sparker
+  crystal_cli_graph:
+    github: masukomi/crystal_cli_graph
 
 
 
