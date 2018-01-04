@@ -58,36 +58,38 @@ module Hey
   end
 end
 
-handled = false
-parser = OptionParser.new do |parser|
-  parser.banner = "Usage: --info"
-  parser.on("-i", "--info", "Returns a JSON string describing this report") {
-    handled = true
-    data = Hash(String, String).new
-    data["name"] = "people_overview"
-    data["description"] = \
-       "Generates a table with all the people you've
-interacted with, their recent activity, and tags."
-  data["db_version"] = "2.0"
+### THIS GETS RUN AS A SEPARATE EXECUTABLE SO...
 
-  json = String.build { |x| data.to_json(x) }
-  puts json
-  }
-  parser.on("-d path", "--database=path", "Specifies the path to the SQLite
-  DB") { |path|
-    handled = true
-    if File.exists?(path)
-      # ENV["DATABASE_URL"]="sqlite3:#{path}"
-      config.set_db_path(path.to_s)
-      pr = Hey::Reports::PeopleReport.new
-      pr.run
-    else
-      STDERR.puts("unable to find db at #{path}")
-      exit 1
-    end
-  }
-end
 if File.basename(PROGRAM_NAME) == "people_report"
+  handled = false
+  parser = OptionParser.new do |parser|
+    parser.banner = "Usage: --info"
+    parser.on("-i", "--info", "Returns a JSON string describing this report") {
+      handled = true
+      data = Hash(String, String).new
+      data["name"] = "people_overview"
+      data["description"] = \
+         "Generates a table with all the people you've
+  interacted with, their recent activity, and tags."
+    data["db_version"] = "2.0"
+
+    json = String.build { |x| data.to_json(x) }
+    puts json
+    }
+    parser.on("-d path", "--database=path", "Specifies the path to the SQLite
+    DB") { |path|
+      handled = true
+      if File.exists?(path)
+        # ENV["DATABASE_URL"]="sqlite3:#{path}"
+        config.set_db_path(path.to_s)
+        pr = Hey::Reports::PeopleReport.new
+        pr.run
+      else
+        STDERR.puts("unable to find db at #{path}")
+        exit 1
+      end
+    }
+  end
   parser.parse(ARGV)
   if !handled
     STDERR.puts("Arguments didn't provide expected data")
