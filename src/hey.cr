@@ -10,9 +10,9 @@ include Hey
 # preferably break them down over multiple classes
 
 # todo: that'll blow up if there isn't one
-puts "db_path: #{config.db_path}"
-puts "DATABASE_URL env: #{ENV["DATABASE_URL"]}"
-puts "==================================================================="
+# puts "db_path: #{config.db_path}"
+# puts "DATABASE_URL env: #{ENV["DATABASE_URL"]}"
+# puts "==================================================================="
 
 parser = SentenceOptions::Parser.new(
   "Usage: unlike many command line tools, hey uses
