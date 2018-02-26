@@ -4,3 +4,5 @@
 /.shards/
 spec/test_copy.db
 /hey
+/starter_files/reports/*
+/starter_files/hey
