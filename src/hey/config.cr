@@ -43,11 +43,10 @@ module Hey
 
     def self.load : Config
       config = Config.from_json(File.read(CONFIG_PATH))
-      if !ENV.has_key? "HEY_DB_PATH"
-        config.update_db_env(config.db_path.to_s)
-      else
-        config.update_db_env(ENV["HEY_DB_PATH"].to_s)
-      end
+      path = config.db_path.to_s
+      path = ENV["HEY_DB_PATH"].to_s if ENV.has_key?("HEY_DB_PATH")
+      config.update_db_env(File.expand_path(path))
+
       config
     end
 
