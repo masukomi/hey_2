@@ -41,19 +41,25 @@ module Hey
     # 5. | Mary      | 4/12/18 09:22        | task list
     def self.list_recent(limit : Int32 = 25)
       recent = Event.all("ORDER BY #{@@order_column} DESC LIMIT #{limit}")
-      data = Array(Array(String | Nil)).new
-      data << ["ID", "Who", "When", "Tags"]
-      recent.each do |event|
-        data << [
-          event.id.to_s,
-          event.persons.map { |p| p.name }.join(", "),
-          event.created_at, # is a string in sqlite
-          event.tags.map { |t| t.name }.join(", "),
-        ]
+      if recent.size > 0
+        data = Array(Array(String | Nil)).new
+        data << ["ID", "Who", "When", "Tags"]
+        recent.each do |event|
+          data << [
+            event.id.to_s,
+            event.persons.map { |p| p.name }.join(", "),
+            event.created_at, # is a string in sqlite
+            event.tags.map { |t| t.name }.join(", "),
+          ]
+        end
+        t = Table.new(data)
+        puts "Here are the last #{limit} recent events:\n"
+        puts t.format
+      else
+        puts "No recent events found."
+        puts "Should I be happy that no-one interrupts you,"
+        puts "or sad because something isn't right?"
       end
-      t = Table.new(data)
-      puts "Here are the last #{limit} recent events:\n"
-      puts t.format
     end
 
     def self.find_by_last_or_id(identifier : String) : Event?
@@ -70,7 +76,7 @@ module Hey
     def set_created_at
       # 2017-05-26 17:33:08
       self.created_at = Time.now.to_s(SQLite3::DATE_FORMAT)
-      
+
     end
 
     def add_tags(new_tags : Array(Hey::Tag))
@@ -160,7 +166,7 @@ module Hey
               e
             end
           }.compact.uniq
-          
+
           if events.size > 0
             events.each do | e |
               # yes, this is many slow deletes
@@ -177,7 +183,7 @@ module Hey
             puts "We shall never speak of #{insertion} again."
 
           else
-            STDERR.puts "Well, that didn't work out..." 
+            STDERR.puts "Well, that didn't work out..."
             response = false
           end
         end
@@ -187,7 +193,7 @@ module Hey
 
     def self.delete_command_description : String
       "  hey delete <last or id>
-     deletes the event specified by 
+     deletes the event specified by
      \"last\" or an id"
     end
 
