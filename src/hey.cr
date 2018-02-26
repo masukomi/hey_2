@@ -15,8 +15,23 @@ include Hey
 # puts "==================================================================="
 
 parser = SentenceOptions::Parser.new(
-  "Usage: unlike many command line tools, hey uses
-        sentence-like commands to simplify interaction.\n")
+  "Usage: Unlike many command line tools, hey uses
+       sentence-like commands to simplify interaction.
+
+       Normally you'll just say \"hey <name>\" to
+       record an interruption by that person.
+
+       If you'd like to tag the kind of interruption
+       at the same time you can either say
+       \"hey <name> tag <tag>\"
+       OR
+       \"hey <name> + <tag>\"
+
+       Tags are space separated.
+
+       Once you've got stuff in your database, You
+       can use these commands to work with it and
+       report on it.\n")
 parser.add_command(
   SentenceOptions::Command.new("list",
     Hey::Event.command_description,

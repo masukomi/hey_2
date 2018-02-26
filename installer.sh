@@ -44,7 +44,9 @@ if [ $installed -eq 0 ]; then
 	echo "Please start over, you silly human."
 	exit 2
 else
+	echo "---------------------------------------------------------------"
+	echo ""
 	echo "Ready to go, boss!"
-	echo "run hey with no arguments to get started"
+	echo "Now, run hey with no arguments to get started."
 fi
 
