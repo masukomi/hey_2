@@ -8,8 +8,14 @@ module Hey
     def initialize(new_db_path : String = Config.default_db_path)
       @db_path = new_db_path
       update_db_env(@db_path)
+      ensure_dirs(@db_path)
     end
 
+
+    def ensure_dirs(db_path : String)
+      Dir.mkdir_p(reports_dir)
+
+    end
     def db_path : String
       @db_path ||= default_db_path()
     end
