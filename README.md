@@ -40,10 +40,14 @@ Example Info:
 {"name":"test_report","description":"just a test.","db_version":"2.0"}
 ```
 
+When a user runs `hey report` a listing of all the reports will be output,
+including the information you've provided in the `--info` json.
+
 In this case you would say `hey report test_report` (because `test_report`
 is it's name) to run that test report.
 
-**The other request**, with a path to the database can do whatever you want it to.
+**The other request**, with a path to the database is what is called when
+someone runs the report (`hey report test_report`) It can do whatever you want it to.
 There are no restrictions. Hey will just call it and assume it does what it's
 intended to do.
 
