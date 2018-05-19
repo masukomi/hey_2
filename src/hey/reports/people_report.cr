@@ -11,25 +11,30 @@ module Hey
     class PeopleReport
       include Sparkline
       include Hey
-
+      MAX_AGE_IN_DAYS=14
       def run
         if !ENV.has_key? "DATABASE_URL"
           config = Hey::Config.load
         end
         data = generate_data()
-        t = Table.new(data)
-        puts "People, 14 days of activity, & tags"
-        puts t.format
+        if data.size > 0
+          t = Table.new(data)
+          puts "People, #{MAX_AGE_IN_DAYS} days of activity, & tags"
+          puts t.format
+        else
+          puts "No interrupts within the past #{MAX_AGE_IN_DAYS} days."
+        end
       end
 
       def generate_data : Array(Array(String | Nil))
         sparker = Sparker.new(Sparkline::Sparker::TICKS_2)
-        peeps = Person.all("ORDER BY name ASC")
         query = "select p.id, t.name
   from people p
   inner join events_people ep on ep.person_id = p.id
+  inner join events e on ep.event_id = e.id
   left outer join events_tags et on et.event_id = ep.event_id
   left outer join tags t on et.tag_id = t.id
+  where e.created_at > '#{MAX_AGE_IN_DAYS.days.ago.to_s("%Y-%m-%d")}'
   order by p.name, ep.event_id;"
         person_to_tags = Hash(Int64, Set(String)).new
         Person.query(query) do |rs|
@@ -44,13 +49,15 @@ module Hey
             end
           end
         end
-
         data = Array(Array(String | Nil)).new
-        data << ["Who", "Recent Activity", "Tags"]
-        peeps.each do |p|
-          sparkline = sparker.generate(p.event_counts_per_day)
-          tags = person_to_tags.has_key?(p.id) ? person_to_tags[p.id].join(", ") : ""
-          data << [p.name, sparkline, tags]
+        if person_to_tags.size > 0
+          peeps = Person.all("WHERE id in (?)", person_to_tags.keys).compact
+          data << ["Who", "Recent Activity", "Tags"]
+          peeps.each do |p|
+            sparkline = sparker.generate(p.event_counts_per_day)
+            tags = person_to_tags.has_key?(p.id) ? person_to_tags[p.id].join(", ") : ""
+            data << [p.name, sparkline, tags]
+          end
         end
         data
       end
