@@ -1,7 +1,15 @@
+# Handle ^C gracefully
+Signal::INT.trap do
+  exit 0
+end
+# END Handle ^C
+
+
+
 config = Hey::Config.load
 config.running_hey
 require "./hey/*" # no it doesn't make sense to require after using
-# but the oter way around doesn't work because
+# but the other way around doesn't work because
 # it doesn't have the db info before loading up
 # Granite ORM subclasses.
 require "sentence_options"
