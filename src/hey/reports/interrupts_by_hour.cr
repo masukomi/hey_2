@@ -25,10 +25,10 @@ module Hey
       end
 
       def generate_data : Tuple(Array(String), Array(Int32))
-        query = "select 
+        query = "select
   strftime('%H', datetime(e.created_at, 'localtime')) hour, count(*) interrupts
-from 
-  events e 
+from
+  events e
 group by 1
 order by hour asc;"
         hours = Array(String).new
@@ -56,6 +56,19 @@ order by hour asc;"
             end
             last_hour += 1
           end
+        end
+        if hours.size == 0
+          #should only happen if run on a new database
+          return interrupt_free_hours_and_counts()
+        end
+        return hours, counts
+      end
+      def interrupt_free_hours_and_counts() : Tuple(Array(String), Array(Int32))
+        hours = Array(String).new
+        counts = Array(Int32).new
+        24.times do |hour|
+          hours.push(hour > 9 ? hour.to_s : "0#{hour}")
+          counts.push(0)
         end
         return hours, counts
       end
