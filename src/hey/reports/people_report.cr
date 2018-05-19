@@ -4,6 +4,7 @@ require "../config.cr"
 require "sparker"
 config = Hey::Config.load
 require "../*"
+require "../../granite_orm/querying.cr"
 require "crystal_fmt"
 
 module Hey
@@ -11,6 +12,7 @@ module Hey
     class PeopleReport
       include Sparkline
       include Hey
+      include Granite::ORM::Querying # dunno why this one needs to be included
       MAX_AGE_IN_DAYS=14
       def run
         if !ENV.has_key? "DATABASE_URL"
@@ -36,6 +38,8 @@ module Hey
   left outer join tags t on et.tag_id = t.id
   where e.created_at > '#{MAX_AGE_IN_DAYS.days.ago.to_s("%Y-%m-%d")}'
   order by p.name, ep.event_id;"
+
+        # STDERR.puts("running query\n#{query}")
         person_to_tags = Hash(Int64, Set(String)).new
         Person.query(query) do |rs|
           rs.each do
@@ -51,7 +55,8 @@ module Hey
         end
         data = Array(Array(String | Nil)).new
         if person_to_tags.size > 0
-          peeps = Person.all("WHERE id in (?)", person_to_tags.keys).compact
+          peeps_query = "WHERE id in (#{prep_array_for_sql(person_to_tags.keys)})"
+          peeps = Person.all(peeps_query)
           data << ["Who", "Recent Activity", "Tags"]
           peeps.each do |p|
             sparkline = sparker.generate(p.event_counts_per_day)
