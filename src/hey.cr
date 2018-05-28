@@ -62,8 +62,8 @@ parser.add_command(
     Hey::Event.delete_command_proc(config)))
 parser.add_command(
   SentenceOptions::Command.new("kill",
-    Hey::Person.kill_command_description,
-    Hey::Person.kill_command_proc(config)))
+    Hey::Killer.kill_command_description,
+    Hey::Killer.kill_command_proc(config)))
 
 
 
@@ -74,8 +74,8 @@ parser.add_command(
     Outputs the current version number",
     Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION}"; true }))
 # should be last.
-parser.add_command(SentenceOptions::Command.new("help",
-"  hey help
+parser.add_command(SentenceOptions::Command.new("--help",
+"  hey --help
     Outputs this usage info",
                                                 Proc(Array(String), Bool).new {|args| puts parser.usage; true }))
 

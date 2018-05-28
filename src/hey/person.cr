@@ -59,10 +59,10 @@ GROUP BY days"
     end
 
     def erase
-      event_ids_query = "select e.id, 
+      event_ids_query = "select e.id,
       ( select count(*) from events_people where events_people.event_id = e.id) epc
       from
-      events e 
+      events e
       inner join events_people ep on ep.event_id = e.id
       inner join people p on ep.person_id = p.id
       where epc = 1
@@ -92,7 +92,7 @@ GROUP BY days"
               p
             end
           }.compact.uniq
-          
+
           if people.size > 0
             people.each do | p |
               # yes, this is many slow deletes
@@ -106,7 +106,7 @@ GROUP BY days"
               puts "We shall never speak of them again."
             end
           else
-            STDERR.puts "Well, that didn't work out..." 
+            STDERR.puts "Well, that didn't work out..."
             response = false
           end
         end
@@ -114,10 +114,10 @@ GROUP BY days"
       }
     end
 
-    def self.kill_command_description : String
-      "  hey kill <name>
-     kills the specified person (not really) 
-     and removes all events that only involved them."
-    end
+    # def self.kill_command_description : String
+    #   "  hey kill <name>
+    #  kills the specified person (not really)
+    #  and removes all events that only involved them."
+    # end
   end
 end

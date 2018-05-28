@@ -38,6 +38,10 @@ module Hey
         raise Exception.new("Unable to find event with identifer: #{identifier}")
       end
     end
+    def erase
+      EventTag.exec("delete from events_tags where tag_id = #{id}")
+      self.destroy
+    end
 
     # -------------------------------------------------
     def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
@@ -74,6 +78,39 @@ module Hey
         else
           STDERR.puts("Usage: hey tags")
           response = false
+        end
+        response
+      }
+    end
+    def self.kill_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      Proc(Array(String), Bool).new { |args|
+        response = true
+        if args.size > 0
+          tags = args.map{ |arg|
+            name = arg.downcase
+            t = Tag.find_by :name, name
+            if ! t
+              STDERR.puts "Unable to find tag with this name: #{name}"
+              nil
+            else
+              t
+            end
+          }.compact.uniq
+
+          if tags.size > 0
+            tags.each do | t |
+              t.erase
+            end
+            if tags.size == 1
+              name = tags.first.name
+              puts "#{name}? What's that? Never heard of it. ;)"
+            else
+              puts "We shall never speak of those tags again."
+            end
+          else
+            STDERR.puts "Well, that didn't work out..."
+            response = false
+          end
         end
         response
       }
