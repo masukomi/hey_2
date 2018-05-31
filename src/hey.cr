@@ -49,6 +49,10 @@ parser.add_command(
     Hey::Tag.command_description,
     Hey::Tag.command_proc(config)))
 parser.add_command(
+  SentenceOptions::Command.new("retag",
+    Hey::Tag.retag_command_description,
+    Hey::Tag.retag_command_proc(config)))
+parser.add_command(
   SentenceOptions::Command.new("tags", # plural
     Hey::Tag.tags_command_description,
     Hey::Tag.tags_command_proc(config)))

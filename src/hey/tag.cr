@@ -65,6 +65,28 @@ module Hey
     tags the event identified by \"last\" or its id
     with the tags that follow (space separated)"
     end
+    def self.retag_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      # hey retag <last|id> <tags list>
+      Proc(Array(String), Bool).new { |args|
+        response = true
+        if args.size > 1
+          last_or_id = args[0]
+          tag_strings = args[1..-1].map { |t| t.downcase }
+          response = Event.find_and_retag(last_or_id, tag_strings)
+        else
+          STDERR.puts("Usage: hey retag <\"last\" or id> <tags list>")
+          response = false
+        end
+        response
+      }
+
+    end
+    def self.retag_command_description : String
+      "  hey retag <last or id> <tag list>
+    replaces the tags in the event identified by \"last\"
+    or its id with the tags that follow (space separated)"
+    end
+
 
     # tags (plural) command stuff --------------------
     def self.tags_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
