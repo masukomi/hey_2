@@ -84,10 +84,11 @@ if !ENV.has_key? "IN_SPEC_TEST"
     STDERR.puts parser.usage
     exit 1
   end
-  success = parser.parse(ARGV)
-  if (!success) && ARGV.size > 0
+  cleaned_args = ARGV.map{|a| a.sub(/,$/, "")}
+  successfully_handled = parser.parse(cleaned_args)
+  if (!successfully_handled) && cleaned_args.size > 0
     # they're trying to create an event with a person's name
-    if ! Hey::Event.create_from_args(ARGV)
+    if ! Hey::Event.create_from_args(cleaned_args)
       exit 1 # STDERR has already been printed to
     end
   end
