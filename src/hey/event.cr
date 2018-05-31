@@ -108,6 +108,16 @@ module Hey
         return false
       end
     end
+    def self.find_and_retag(last_or_id : String, tag_strings : Array(String)) : Bool
+      event = Event.find_by_last_or_id(last_or_id)
+      if event
+        event.as(Event).clear_tags!
+        find_and_tag(last_or_id, tag_strings)
+      else
+        STDERR.puts("Unable to find Event with that identifier: #{last_or_id}")
+        return false
+      end
+    end
 
     def self.create_from_args(args) : Event
       names = Array(String).new
