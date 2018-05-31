@@ -136,9 +136,22 @@ describe Hey::Event do
       end
     end
   end
-  it "should be able to create  from args" do
+  it "should be able to create from args" do
     e = Hey::Event.create_from_args(["mc_testerson", "+", "test"])
     e.nil?.should(be_false())
+  end
+  it "events created from args should have associatedtags" do
+    e = Hey::Event.create_from_args(["mc_testerson", "+", "test"])
+    tags = e.as(Hey::Event).tags
+    tags.size.should(eq(1))
+    tags[0].name.should(eq("test"))
+  end
+  it "should be able to clear existing tags" do
+    e = Hey::Event.create_from_args(["mc_testerson", "+", "test"])
+    e.as(Hey::Event).tags.size.should(eq(1))
+    e.clear_tags!
+    e = Hey::Event.find(e.id)
+    e.as(Hey::Event).tags.size.should(eq(0))
   end
 
   it "should have associated people when created from args" do

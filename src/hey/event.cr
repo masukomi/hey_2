@@ -84,6 +84,11 @@ module Hey
       self.tags = (self.tags + addable)
     end
 
+    def clear_tags!()
+      self.tags = Array(Tag).new()
+      self.save
+    end
+
     def self.find_and_tag(last_or_id : String, tag_strings : Array(String)) : Bool
       event = Event.find_by_last_or_id(last_or_id)
       if event
