@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hey!</title>
+    <link rel="stylesheet" type="text/css" href="css/LemonYellowSunWebfontsKit.css"/>
+    <link rel="stylesheet" type="text/css" href="css/hey.css"/>
+
+  </head>
+  <body>
+    <div class="header">
+      <span class="logo_holder">
+        <a href="https://interrupttracker.com"><img
+           src="images/hey_plus_text_icon.svg" id="logo" align="left" /></a>
+      </span>
+      <h2 class="LemonYellowSun page_header">Hey! Did you see this?</h3>
+    </div>
+    <div class="content">
+    <h1>Hey! An command line Interruption Tracker</h1>
+    <p class="LemonYellowSun">
+      "Hey! I've got a question."
+      <br />"Hey can you take a look at this?"
+      <br />"Hey, did you finish that thing?"
+      <br />"Hey!"
+    </p>
+
+    <h2>Sound familiar?</h2>
+    <p>
+Interested in tracking just how many times you're interrupted and by who?
+    </p>
+
+    <p>Well hey, maybe <span class="LemonYellowSun">Hey!</span> is the tool for 
+    you.</p>
+
+    <p>When someone walks up to you and starts talking, breaks your concentration with
+yet another slack message, or diety forbid, actually calls your phone...just
+type <code>hey &lt;person's name&gt;</code> on the command line.
+	</p>
+
+	<p>That's it. An entry in a local db will be created for the event, who did
+	it, and when it happened.</p>
+
+    <p>Want to start tracking _why_ people are interrupting you? After the interruption 
+you can, optionally, list and tag the events, leave a note, 
+or generate reports graphing all your past interruptions.</p>
+
+    <p>Track it for long enough and patterns are sure to emerge. Maybe you'll find 
+that a little documentation could save you hours a week. Maybe you'll find that
+one person that's devouring more time than anyone else and discuss a better way to
+handle things.</p>
+
+    <h2>Reports</h2>
+    <p>One of the more interesting things about hey is that you are not limited
+    to the reports I've created. You can add as many reports as you want in any
+    language you want. They can generate, HTML, PDFs, whatever output you want.
+    You can find details on the <a href="creating_reports.html">Creating
+    Reports</a> page.</p>
+
+    <p>To see what reports are available just type 
+    <code>hey report</code></p>
+
+    <p>Hey ships with 3 command line reports:
+    <ul>
+      <li><b>people_overview</b>
+      <br />Generates a table with all the people you've interacted with, their recent activity, and tags.</li>
+      <li><b>interrupts_by_hour</b>
+      <br />Generates a graph of interruptions by hour</li>
+      <li><b>sparkline_24</b>
+      <br />generates a small sparkline graph of interruptions within the past 24 hours. Useful for integrating into other command line things, like your prompt.</li>
+    </ul>
+    </p>
+
+    <h3>Usage</h3>
+    <p>Please check out the <a href="usage.html">Usage page</a> for usage
+    details.</p>
+    
+    <h2>Installation</h2>
+    <h3>Mac Users</h3>
+    <p><a href="https://brew.sh">Homebrew</a> is the best way to install it on the Mac.
+    <code>
+    $ brew tap masukomi/homebrew-apps
+    $ brew install hey
+    </code>
+
+    <h3>Geeks On Other Platforms</h3>
+    <p>You'll need to build Hey! from source. It is written in 
+    <a href="https://crystal-lang.org/">Crystal</a> so you'll need to install
+    the crystal compiler. After that you just clone down this repository, cd 
+    into it and run 
+
+    <code>
+    ./build.sh
+    </code>
+    <div id="footer">
+      <a href="htts://interrupttracker.com/">Hey</a> is copyright © 2017 Kay Rhodes. 
+    </div>
+  </body>
+</html>
+

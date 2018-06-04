@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>How to use Hey!</title>
+    <link rel="stylesheet" type="text/css" href="css/LemonYellowSunWebfontsKit.css"/>
+    <link rel="stylesheet" type="text/css" href="css/hey.css"/>
+  </head>
+  <body>
+    <div class="header">
+      <span class="logo_holder">
+        <a href="https://interrupttracker.com"><img
+           src="images/hey_plus_text_icon.svg" id="logo" align="left" /></a>
+      </span>
+      <h2 class="LemonYellowSun page_header">Hey! Did you see this?</h3>
+    </div>
+    <div class="content">
+    <h1 class="LemonYellowSun">Hey! An Interruption Tracker for Mac users</h1>
+
+    <h2 class="LemonYellowSun">Usage</h2>
+
+<h4 id="recordanevent">Record an event</h4>
+
+<p><code>hey &lt;names&gt;</code> </p>
+
+<p><code>&lt;names&gt;</code> is a space separated list of one or more
+people&#8217;s names. </p>
+
+<p>Note: all names are downcased in the database to save worrying about multiple
+entries when you accidentally type &#8220;bob&#8221; one time and &#8220;Bob&#8221; the next.</p>
+
+<h4 id="taganevent">Tag an event</h4>
+
+<p><code>hey tag &lt;event id&gt; &lt;tags&gt;</code><br/>
+<code>hey retag &lt;event id&gt; &lt;tags&gt;</code></p>
+
+<p><code>&lt;event id&gt;</code> is usually <code>last</code> (to tag the most
+recent event) but if you need 
+to tag a different one that was shown by <code>hey list</code> or <code>hey data</code>
+you can enter its id.</p>
+
+<p><code>&lt;tags&gt;</code> is a space separated list of tags to associated with this event.</p>
+
+<p>If you <code>tag</code> the same event twice then the new tags will be appended to the list.</p>
+
+<p>If you <code>retag</code> an event the new list will replace the old one</p>
+
+<h4 id="taganevent">List all tags</h4>
+
+<p><code>hey tags</code><br/>
+
+<p>Lists all the tags currently in the system</p>
+
+
+<h4 id="record_and_tag">Record an event and tag it at the same time</h4>
+<p>Most of the time you create an event as it happens, and you don't know what it's
+going to be about yet, so you create it, then tag it later. But sometimes you
+create it just <i>after</i> it happened and you <i>do</i> know what it was
+about.</p>
+<p>
+<code>hey &lt;names&gt; + &lt;tags&gt;</code>
+  </p>
+  <p>
+<code>&lt;names&gt;</code> is a space separated list of one or more
+people's names.
+  </p>
+  <p>
+<code>&lt;tags&gt;</code> is a space separated list of tags to associated with this event.
+  </p>
+
+
+<h4 id="viewingrecentevents">Viewing recent events</h4>
+
+<p><code>hey</code> or <code>hey list</code> or <code>hey list 3</code></p>
+
+<p>by default this will display the last 25 interruptions, but if you pass 
+<code>hey list</code> a number it will display that many.</p>
+
+<pre><code class="">$ hey list
+Last 3 interruptions in chronological order...
+
+ | ID  |  Who       |When                 | Tags               |
+ | 105 |  Bob, Mary |2017-06-17 08:53:48  | meeting, scheduled |
+ | 106 |  Bob       |2017-06-17 08:53:55  | question           |
+ | 109 |  Sam       |2017-06-28 11:35:05  | task               |
+</code></pre>
+
+<h4 id="whoandwhy">Seeing who's been interrupting you and why</h4>
+One of the reports that comes with hey is the <code>people_overview</code>.
+It shows the list of people you've interacted with recently, a little graph
+of how many interactions per day, and a list of the tags associated with
+those interruptions</p>
+
+<p>Tags become pretty important here because you can see the topics that
+each person has needed you on. Once you know this you can write up some docs, 
+take them aside to give them an explanation, or whatever else is appropriate
+to help minimize future interruptions.</p>
+
+<img alt="people overview example" title="people overview example"
+width="40%" height="40%"
+src="images/people_overview_example.jpg">
+
+<h4 id="interrupts_by_hour">Seeing when you're most likely to be
+	interrupted</h4>
+
+<p>The <code>interrupts_by_hour</code> report will help you see what hours
+of the day you're most likely to be interrupted. These are the hours
+when you should either not plan on getting anything done, or recognize
+that extra measures will have to be taken to get things done then.</p>
+
+<pre><code>$ hey report interrupts_by_hour
+Interrupts By Hour:
+
+                                          o
+                                          |
+                                 o     o  |
+                                 |     |  |
+                                 |     |  |     o
+                           o     |     |  |  o  |
+                           |     |     |  |  |  |
+                           |     |     |  |  |  |
+                           |  o  |     |  |  |  |
+                           |  |  |     |  |  |  |
+                           |  |  |     |  |  |  |
+                           |  |  |     |  |  |  |
+                           |  |  |     |  |  |  |
+o  o  o  o  o  o  o  o  o  |  |  |  o  |  |  |  |  o  o  o  o
+00 01 02 03 04 05 07 07 08 09 10 11 12 13 14 15 16 17 18 19 23
+</code></pre>
+
+
+<h4 id="killing things">Killing Things</h4>
+
+<p><code>kill</code> is the keyword for... well, killing things. It should be
+noted that there is <em>no undo</em> in hey!</p>
+
+<pre><code>
+hey kill <name>
+hey kill tag <tag>
+hey kill event <last or id>
+</code></pre>
+
+<h4 id="deleteaccidentalpeople">Delete accidental people</h4>
+
+<p><code>hey kill &lt;name&gt;</code></p>
+
+<p><em>(Note: No humans will be harmed in the execution of this
+command.)</em></p>
+
+<p>Deletes that person from your database, and removes them from
+any events. If there are events that <em>only</em> involved that
+person, they will also be deleted.</p>
+
+<h4 id="deleteunwantedtags">Delete unwanted tags</h4>
+<p><code>hey kill &lt;tag name&gt;</code></p>
+<p>Deletes that tag, but not any of the events tagged with it.</p>
+
+<h4 id="deleteunwantedtags">Delete events</h4>
+<p><code>hey kill event &lt;last or event id&gt;</code></p>
+<p>See <code>hey delete</code> below.</p>
+
+
+<h4 id="deleteaccidentalinterrupts">Delete events</h4>
+
+<p><code>hey delete &lt;last event id&gt;</code></p>
+
+<p><code>&lt;last or event id&gt;</code> is either "last" (the last event) or 
+one of the ids shown by <code>hey list</code></p>
+
+
+    
+    <div id="footer">
+      <a href="htts://interrupttracker.com/">Hey</a> is copyright © 2017 Kay Rhodes. 
+    </div>
+  </body>
+</html>
+
