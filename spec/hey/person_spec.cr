@@ -4,7 +4,6 @@ describe Hey::Person do
   it "should not allow you to set an id in initialization" do
     # a) no need
     # b) Granite won't let you
-    puts "DATABASE_URL: #{ENV["DATABASE_URL"]}"
     p = Hey::Person.new(id: 1, name: "bob")
     p.id.should(be_falsey)
     p.name.should(eq("bob"))
@@ -30,30 +29,49 @@ describe Hey::Person do
       p.name.should(be_truthy()) # e.g. "Bob"
     end
   end
-  it "find_or_create_with should not create dupes" do
-    existing = Person.all
-    existing_names = existing.map { |p| p.name }.compact
-    (existing_names.size > 0).should(be_true())
-    current_number = Person.count
-    newish_people = Person.find_or_create_with(existing_names)
-    newish_people.size.should(eq(current_number))
-  end
-  it "find_or_create_with should only create needed" do
-    existing = Person.all
-    existing_names = existing.map { |p| p.name }.compact
-    (existing_names.size > 0).should(be_true())
-    current_number = Person.count
-    test_name = "tester-#{Random.new.next_int}"
-    newish_people = Person.find_or_create_with(existing_names + [test_name])
-    newish_people.size.should(eq(current_number + 1))
-    newish_people.map { |x| x.name }.includes?(test_name).should(be_true())
-  end
+  describe "#find_or_create_with" do
+    it "should not create dupes" do
+      existing = Person.all
+      existing_names = existing.map { |p| p.name }.compact
+      (existing_names.size > 0).should(be_true())
+      current_number = Person.count
+      newish_people = Person.find_or_create_with(existing_names)
+      newish_people.size.should(eq(current_number))
+    end
+    it "should only create needed" do
+      existing = Person.all
+      existing_names = existing.map { |p| p.name }.compact
+      (existing_names.size > 0).should(be_true())
+      current_number = Person.count
+      test_name = "tester-#{Random.new.next_int}"
+      newish_people = Person.find_or_create_with(existing_names + [test_name])
+      newish_people.size.should(eq(current_number + 1))
+      newish_people.map { |x| x.name }.includes?(test_name).should(be_true())
+    end
 
-  it "find_or_create_with should only return supplied folks" do
-    test_name = "tester-#{Random.new.next_int}"
-    newish_people = Person.find_or_create_with([test_name])
-    newish_people.size.should(eq(1))
-    newish_people.map { |x| x.name }.includes?(test_name).should(be_true())
+    it "should only return supplied folks" do
+      test_name = "tester-#{Random.new.next_int}"
+      newish_people = Person.find_or_create_with([test_name])
+      newish_people.size.should(eq(1))
+      newish_people.map { |x| x.name }.includes?(test_name).should(be_true())
+    end
+  end
+  describe "#find_or_create_from" do
+    it "should return people with names matching space separated string" do
+      names = "foo bar baz"
+      people = Person.find_or_create_from(names)
+      people.map{|p|p.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
+    it "should return people with names matching space separated string" do
+      names = "foo, bar, baz"
+      people = Person.find_or_create_from(names)
+      people.map{|p|p.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
+    it "shouldn't have problems with empty strings" do
+      names = "foo, ,  bar,, baz,"
+      people = Person.find_or_create_from(names)
+      people.map{|p|p.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
   end
 
   it "should have associated EventPerson objects" do

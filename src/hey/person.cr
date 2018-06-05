@@ -77,6 +77,12 @@ GROUP BY days"
       Event.exec("delete from events where id in (#{prep_array_for_sql(eids)})")
       self.destroy
     end
+
+    def self.find_or_create_from(people_string : String) : Array(Person)
+      names = people_string.split(/,*\s+|,$/).reject{|x|x.size == 0}.map{|x|x.downcase}
+      # that handles trailing, single, double, and no comma
+      Person.find_or_create_with(names)
+    end
     # ----------------------------------
     def self.kill_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
       Proc(Array(String), Bool).new { |args|

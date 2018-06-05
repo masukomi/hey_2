@@ -73,15 +73,41 @@ module Hey
       end
     end
 
-    def set_created_at
+    def set_created_at(t : Time = Time.now) : Event
       # 2017-05-26 17:33:08
-      self.created_at = Time.now.to_s(SQLite3::DATE_FORMAT)
-
+      self.created_at = t.to_s(SQLite3::DATE_FORMAT)
+      self
+    end
+    def set_created_at!(t : Time = Time.now) : Event
+      set_created_at(t).save
+      self
+    end
+    def get_created_at_time() : Time?
+      return nil if self.created_at.nil?
+      Time.parse(self.created_at.to_s, SQLite3::DATE_FORMAT)
     end
 
-    def add_tags(new_tags : Array(Hey::Tag))
+    def add_tags(new_tags : Array(Hey::Tag)) : Event
       addable = new_tags - tags
       self.tags = (self.tags + addable)
+      self
+    end
+    def add_tags(new_tag_strings : Array(String)) : Event
+      add_tags(strings_to_tags(new_tag_strings))
+    end
+    def add_tags!(new_tag_strings : Array(String)) : Event
+      add_tags(new_tag_strings).save
+      self
+    end
+
+    def to_simple_string() : String
+      people_list = self.persons.map{|p|p.name.to_s}.join(", ")
+      tags_list = self.tags.map{|t|t.name.to_s}.join(", ")
+      tags_list = "No Tags" if tags_list.size == 0
+      "Event #{self.id}:
+  time:   #{self.created_at}
+  people: #{people_list}
+  tags:   #{tags_list}"
     end
 
     def clear_tags!()
@@ -92,16 +118,7 @@ module Hey
     def self.find_and_tag(last_or_id : String, tag_strings : Array(String)) : Bool
       event = Event.find_by_last_or_id(last_or_id)
       if event
-        tags = tag_strings.map { |string|
-          t = Tag.find_by :name, string
-          if t.nil?
-            t = Tag.new
-            t.name = string
-            t.save
-          end
-          t
-        }
-        event.add_tags(tags)
+        event.add_tags!(tag_strings)
         return true
       else
         STDERR.puts("Unable to find Event with that identifier: #{last_or_id}")
@@ -111,8 +128,8 @@ module Hey
     def self.find_and_retag(last_or_id : String, tag_strings : Array(String)) : Bool
       event = Event.find_by_last_or_id(last_or_id)
       if event
-        event.as(Event).clear_tags!
-        find_and_tag(last_or_id, tag_strings)
+        event.as(Event).retag!(tag_strings)
+        return true
       else
         STDERR.puts("Unable to find Event with that identifier: #{last_or_id}")
         return false
@@ -148,7 +165,36 @@ module Hey
       e
     end
 
+    def retag(tag_strings : Array(String)) : Event
+      clear_tags!
+      add_tags(tag_strings)
+    end
+    def retag(tags : Array(Hey::Tag)) : Event
+      clear_tags!
+      add_tags(tags)
+    end
+    def retag!(tag_strings : Array(String)) : Event
+      retag(tag_strings).save
+      self
+    end
+    def retag!(tags : Array(Hey::Tag)) : Event
+      retag(tags).save
+      self
+    end
+
+    private def strings_to_tags(tag_strings : Array(String)) : Array(Hey::Tag)
+      tag_strings.map { |string|
+        t = Tag.find_by :name, string
+        if t.nil?
+          t = Tag.new
+          t.name = string
+          t.save
+        end
+        t
+      }
+    end
     # -----------------------------------
+    # LIST
     def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)
       Proc(Array(String), Bool).new { |args|
         limit = 25
@@ -167,6 +213,7 @@ module Hey
     end
 
     # ----------------------------------
+    # DELETE
     def self.delete_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
       Proc(Array(String), Bool).new { |args|
         response = true
@@ -214,6 +261,31 @@ module Hey
 
 
     # ----------------------------------
+    # EDIT
+     def self.edit_command_proc(config : Hey::Config) : Proc(Array(String), Bool)
+      Proc(Array(String), Bool).new { |args|
+        limit = 25
+        lid = args.first
+        if args.size > 0
+          e = Event.find_by_last_or_id(lid)
+          if ! e.nil?
+            ee = EventEditor.new(e.as(Event))
+            ee.interrogate!
+            true
+          else
+            STDERR.puts "Unable to find event with this identifier: #{lid}"
+            false
+          end
+        else
+          false
+        end
+      }
+    end
+
+    def self.edit_command_description : String
+      "  hey edit <last or id>
+     edits the specified event"
+    end
 
   end
 end

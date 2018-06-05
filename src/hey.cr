@@ -53,6 +53,10 @@ parser.add_command(
     Hey::Tag.retag_command_description,
     Hey::Tag.retag_command_proc(config)))
 parser.add_command(
+  SentenceOptions::Command.new("edit",
+    Hey::Event.edit_command_description,
+    Hey::Event.edit_command_proc(config)))
+parser.add_command(
   SentenceOptions::Command.new("tags", # plural
     Hey::Tag.tags_command_description,
     Hey::Tag.tags_command_proc(config)))
@@ -81,7 +85,7 @@ parser.add_command(
 parser.add_command(SentenceOptions::Command.new("--help",
 "  hey --help
     Outputs this usage info",
-                                                Proc(Array(String), Bool).new {|args| puts parser.usage; true }))
+    Proc(Array(String), Bool).new {|args| puts parser.usage; true }))
 
 if !ENV.has_key? "IN_SPEC_TEST"
   if ARGV.size == 0

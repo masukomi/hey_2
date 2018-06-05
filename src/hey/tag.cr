@@ -42,6 +42,11 @@ module Hey
       EventTag.exec("delete from events_tags where tag_id = #{id}")
       self.destroy
     end
+    def self.find_or_create_from(tags_string : String) : Array(Tag)
+      tag_strings = tags_string.split(/,*\s+|,$/).reject{|x|x.size == 0}.map{|x|x.downcase}
+      # that handles trailing, single, double, and no comma
+      Tag.find_or_create_with(tag_strings)
+    end
 
     # -------------------------------------------------
     def self.command_proc(config : Hey::Config) : Proc(Array(String), Bool)

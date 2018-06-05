@@ -53,29 +53,48 @@ describe Hey::Tag do
       end
     end
   end
-  it "find_or_create_with should not create dupes" do
-    existing = Tag.all
-    existing_names = existing.map { |p| p.name }.compact
-    (existing_names.size > 0).should(be_true())
-    current_number = Tag.count
-    newish_tags = Tag.find_or_create_with(existing_names)
-    newish_tags.size.should(eq(current_number))
-  end
-  it "find_or_create_with should only create needed" do
-    existing = Tag.all
-    existing_names = existing.map { |p| p.name }.compact
-    (existing_names.size > 0).should(be_true())
-    current_number = Tag.count
-    test_name = "tag-#{Random.new.next_int}"
-    newish_tags = Tag.find_or_create_with(existing_names + [test_name])
-    newish_tags.size.should(eq(current_number + 1))
-    newish_tags.map { |x| x.name }.includes?(test_name).should(be_true())
-  end
+  describe "#find_or_create_with" do
+    it "should not create dupes" do
+      existing = Tag.all
+      existing_names = existing.map { |p| p.name }.compact
+      (existing_names.size > 0).should(be_true())
+      current_number = Tag.count
+      newish_tags = Tag.find_or_create_with(existing_names)
+      newish_tags.size.should(eq(current_number))
+    end
+    it "should only create needed" do
+      existing = Tag.all
+      existing_names = existing.map { |p| p.name }.compact
+      (existing_names.size > 0).should(be_true())
+      current_number = Tag.count
+      test_name = "tag-#{Random.new.next_int}"
+      newish_tags = Tag.find_or_create_with(existing_names + [test_name])
+      newish_tags.size.should(eq(current_number + 1))
+      newish_tags.map { |x| x.name }.includes?(test_name).should(be_true())
+    end
 
-  it "find_or_create_with should only return supplied folks" do
-    test_name = "tag-#{Random.new.next_int}"
-    newish_tags = Tag.find_or_create_with([test_name])
-    newish_tags.size.should(eq(1))
-    newish_tags.map { |x| x.name }.includes?(test_name).should(be_true())
+    it "should only return supplied folks" do
+      test_name = "tag-#{Random.new.next_int}"
+      newish_tags = Tag.find_or_create_with([test_name])
+      newish_tags.size.should(eq(1))
+      newish_tags.map { |x| x.name }.includes?(test_name).should(be_true())
+    end
+  end
+  describe "#find_or_create_from" do
+    it "should return people with names matching space separated string" do
+      names = "foo bar baz"
+      people = Tag.find_or_create_from(names)
+      people.map{|t|t.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
+    it "should return people with names matching space separated string" do
+      names = "foo, bar, baz"
+      people = Tag.find_or_create_from(names)
+      people.map{|t|t.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
+    it "shouldn't have problems with empty strings" do
+      names = "foo, ,  bar,, baz,"
+      people = Tag.find_or_create_from(names)
+      people.map{|t|t.name.to_s}.sort.should(eq(["bar", "baz", "foo"]))
+    end
   end
 end
