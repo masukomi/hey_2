@@ -48,7 +48,8 @@ module Hey
           data << [
             event.id.to_s,
             event.persons.map { |p| p.name }.join(", "),
-            event.created_at, # is a string in sqlite
+            event.created_at.to_s.sub(/\.\d+$/, ""), # is a string in sqlite
+                                                # DATE_FORMAT = "%F %H:%M:%S.%L"
             event.tags.map { |t| t.name }.join(", "),
           ]
         end
