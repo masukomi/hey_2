@@ -1,6 +1,7 @@
 require "readline"
 class Hey::EventEditor
   include Hey::CliTool
+  TIME_REGEXP = /^\s*([0-9]{1,2}):([0-9]{2})\s*$/
   getter :event
   def initialize(@event : Event)
 
@@ -35,13 +36,7 @@ class Hey::EventEditor
   def get_new_time() : Time
     # read input
     input = ask_until_acceptable("what time did it happen ( HH:MM or H:MM)?",
-                                 Proc(String, Bool).new { |arg|
-                                   if arg.strip =~ /^([0-9]{1,2}):([0-9]{2})$/
-                                     true
-                                   else
-                                     false
-                                   end
-                                 })
+                                 acceptable_time_proc)
     begin
       new_time = string_to_time(input)
     rescue
@@ -65,7 +60,7 @@ class Hey::EventEditor
     # day's event time
     original_time = @event.get_created_at_time.as(Time)
     # we're editing an existing event. it MUST have a created_at
-    m = string.match(/^([0-9]{1,2}):([0-9]{2})$/)
+    m = string.match(TIME_REGEXP)
     raise "Invalid time string: #{string}" if m.nil?
 
     matcher = m.as(Regex::MatchData)
@@ -75,5 +70,22 @@ class Hey::EventEditor
              matcher[1].to_i,
              matcher[2].to_i,
              0)
+  end
+
+  def acceptable_time_proc() : Proc(String,Bool)
+    Proc(String, Bool).new { |arg| m = arg.match(TIME_REGEXP)
+                                   if m
+                                     matcher = m.as(Regex::MatchData)
+                                     if matcher[1].to_i < 25 \
+                                         && matcher[2].to_i < 60
+                                       true
+                                     else
+                                       false
+                                     end
+                                   else
+                                     false
+                                   end
+
+                                 }
   end
 end
