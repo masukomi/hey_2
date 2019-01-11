@@ -1,3 +1,3 @@
 module Hey
-  VERSION = "2.0.0"
+  VERSION = "VERSION_NUMBER_HERE"
 end

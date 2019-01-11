@@ -2,12 +2,12 @@
 VERSION="dev_version"
 if [ "$1" != "" ]; then
   VERSION=$1
-  perl -pi -e "s/VERSION_NUMBER_HERE/$1/" src/hey.cr
+  perl -pi -e "s/VERSION_NUMBER_HERE/$1/" src/hey/version.cr
 fi
 echo "building hey..."
 crystal build --release src/hey.cr
 if [ "$1" != "" ]; then
-  perl -pi -e "s/$1/VERSION_NUMBER_HERE/" src/hey.cr
+  perl -pi -e "s/$1/VERSION_NUMBER_HERE/" src/hey/version.cr
 fi
 
 
@@ -20,7 +20,7 @@ echo "building sparkline_24..."
 crystal build --release src/hey/reports/sparkline_24.cr
 
 echo "copying files around for distribution..."
-version_dir="hey_$VERSION"
+version_dir="hey_v$VERSION"
 rm -rf $version_dir
 
 mkdir -p $version_dir/reports
@@ -44,6 +44,8 @@ cp starter_files/hey.db $version_dir/hey.db
 echo "tarring it up as $version_dir.tgz"
 tar -czf $version_dir.tgz $version_dir
 rm -rf $version_dir
+sha=$(shasum -a 256 $version_dir.tgz)
+echo "release sha is $sha"
 echo "DONE"
 
 
