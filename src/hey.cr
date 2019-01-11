@@ -7,6 +7,16 @@ end
 
 
 config = Hey::Config.load
+if config.needs_installation_or_upgrade?
+  if ! config.got_db?
+    STDERR.puts "Oh! I don't see a database. I think this is a new install."
+  else
+    STDERR.puts "Oh, it looks like you need an upgrade!"
+  end
+  STDERR.puts "Please run the following command:"
+  STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
+  exit(1)
+end
 config.running_hey
 require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
