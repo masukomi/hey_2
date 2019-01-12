@@ -1,4 +1,5 @@
 require "json"
+require "sqlite3"
 require "./interrupt_database"
 
 module Hey
@@ -48,6 +49,44 @@ module Hey
       config.update_db_env(File.expand_path(path))
 
       config
+    end
+    def needs_installation_or_upgrade?() : Bool
+      if got_db?
+        if db_up_to_date?
+          return true
+        end
+      end
+      false
+    end
+
+    def got_db?
+      return File.exists?(db_path.sub("sqlite3:", ""))
+    end
+    def db_up_to_date?(version : String = get_db_version()) : Bool
+      version == Hey::VERSION
+      # see comment in get_db_version
+    end
+    def get_db_version() : String
+      version = "VERSION_NUMBER_HERE."
+      # That seems odd, but it's what is stored in Hey::VERSION
+      # until built with a specific version number
+      # If you don't have a db you'll never get this far.
+      # If you're developing we're assuming your db is correct
+      begin
+        DB.open db_path do |db|
+          db.query "select major, minor, patch from versions order by id desc limit 1" do |rs|
+            version = String.build do | str |
+              rs.each do
+                str << rs.read(Int64).to_s
+                str << "."
+              end
+            end
+          end
+        end
+      rescue
+        #eat it.
+      end
+      version.chomp('.') # get rid of the trailing period
     end
 
     def running_hey : Bool
