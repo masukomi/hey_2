@@ -3,7 +3,7 @@ require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
 require "../granite_orm/querying.cr"
 
-require "./reports/people_report.cr"
+# require "./reports/people_report.cr"
 
 module Hey
   class Person < Granite::ORM::Base

@@ -39,7 +39,7 @@ module Hey
     end
 
     def save
-      self.to_json(File.new(@db_path))
+      self.to_json(File.new(self.db_path))
     end
 
     def self.load : Config
@@ -50,17 +50,20 @@ module Hey
 
       config
     end
+
+    # returns true if db install or upgrade is needed
+    # otherwise returns false if all is good.
     def needs_installation_or_upgrade?() : Bool
       if got_db?
         if db_up_to_date?
-          return true
+          return false
         end
       end
-      false
+      true
     end
 
     def got_db?
-      return File.exists?(db_path.sub("sqlite3:", ""))
+      return File.exists?(self.db_path.sub("sqlite3:", ""))
     end
     def db_up_to_date?(version : String = get_db_version()) : Bool
       version == Hey::VERSION
@@ -73,7 +76,7 @@ module Hey
       # If you don't have a db you'll never get this far.
       # If you're developing we're assuming your db is correct
       begin
-        DB.open db_path do |db|
+        DB.open self.db_path do |db|
           db.query "select major, minor, patch from versions order by id desc limit 1" do |rs|
             version = String.build do | str |
               rs.each do
@@ -95,7 +98,7 @@ module Hey
     end
 
     JSON.mapping({
-      db_path: {type: String, nilable: true},
+      db_path: {type: String, nilable: false},
     })
   end
 end

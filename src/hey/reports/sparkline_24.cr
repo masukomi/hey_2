@@ -1,18 +1,27 @@
 require "option_parser"
-require "json"
 require "../config.cr"
 config = Hey::Config.load
+require "./report.cr"
 require "../*"
 require "sparker"
 
 module Hey
   module Reports
-    class Sparkline24
+    class Sparkline24 < Hey::Reports::Report
       include Hey
       include Sparkline
 
-      def run
-        if !ENV.has_key? "DATABASE_URL"
+      getter :name, :description, :db_version, :location
+      def initialize()
+        @name = "sparkline_24"
+        @description = "Generates a sparkline graph of interrupts within the past 24hrs"
+        @version = Hey::VERSION
+        @location = nil.as(String?)
+      end
+
+      def run(db_path : String | Nil)
+        # vvv should never be needed
+        if db_path.nil? && !ENV.has_key? "DATABASE_URL"
           config = Hey::Config.load
         end
         hours, counts = generate_data()
@@ -79,40 +88,39 @@ order by hour asc;"
   end
 end
 
-### THIS GETS RUN AS A SEPARATE EXECUTABLE SO...
-
-if File.basename(PROGRAM_NAME) == "sparkline_24"
-  handled = false
-  parser = OptionParser.new do |parser|
-    parser.banner = "Usage: --info"
-    parser.on("-i", "--info", "Returns a JSON string describing this report") {
-      handled = true
-      data = Hash(String, String).new
-      data["name"] = "sparkline_24"
-      data["description"] = \
-        "Generates a sparkline graph of interrupts within the past 24hrs"
-      data["db_version"] = "2.0"
-
-      json = String.build { |x| data.to_json(x) }
-      puts json
-    }
-    parser.on("-d path", "--database=path", "Specifies the path to the SQLite
-    DB") { |path|
-      handled = true
-      if File.exists?(path)
-        # ENV["DATABASE_URL"]="sqlite3:#{path}"
-        config.set_db_path(path.to_s)
-        report = Hey::Reports::Sparkline24.new
-        report.run
-      else
-        STDERR.puts("unable to find db at #{path}")
-        exit 1
-      end
-    }
-  end
-  parser.parse(ARGV)
-  if !handled
-    STDERR.puts("Arguments didn't provide expected data")
-    puts parser
-  end
-end
+### You'd do this if it was running as a separated executable
+# if File.basename(PROGRAM_NAME) == "sparkline_24"
+#   handled = false
+#   parser = OptionParser.new do |parser|
+#     parser.banner = "Usage: --info"
+#     parser.on("-i", "--info", "Returns a JSON string describing this report") {
+#       handled = true
+#       data = Hash(String, String).new
+#       data["name"] = "sparkline_24"
+#       data["description"] = \
+#         "Generates a sparkline graph of interrupts within the past 24hrs"
+#       data["db_version"] = "2.0"
+#
+#       json = String.build { |x| data.to_json(x) }
+#       puts json
+#     }
+#     parser.on("-d path", "--database=path", "Specifies the path to the SQLite
+#     DB") { |path|
+#       handled = true
+#       if File.exists?(path)
+#         # ENV["DATABASE_URL"]="sqlite3:#{path}"
+#         config.set_db_path(path.to_s)
+#         report = Hey::Reports::Sparkline24.new
+#         report.run
+#       else
+#         STDERR.puts("unable to find db at #{path}")
+#         exit 1
+#       end
+#     }
+#   end
+#   parser.parse(ARGV)
+#   if !handled
+#     STDERR.puts("Arguments didn't provide expected data")
+#     puts parser
+#   end
+# end

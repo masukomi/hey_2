@@ -22,6 +22,9 @@ require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
 # it doesn't have the db info before loading up
 # Granite ORM subclasses.
+# reports need to be required first to prevent circular dependency
+# issues when hey/report is loaded
+# end reports
 require "sentence_options"
 include Hey
 # TODO: figure out where to put all these methods
@@ -72,8 +75,8 @@ parser.add_command(
     Hey::Tag.tags_command_proc(config)))
 parser.add_command(
   SentenceOptions::Command.new("report",
-    Report.command_description,
-    Report.command_proc(config)))
+    ReportCollection.command_description,
+    ReportCollection.command_proc(config)))
 parser.add_command(
   SentenceOptions::Command.new("delete",
     Hey::Event.delete_command_description,

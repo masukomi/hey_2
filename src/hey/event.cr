@@ -85,7 +85,9 @@ module Hey
     end
     def get_created_at_time() : Time?
       return nil if self.created_at.nil?
-      Time.parse(self.created_at.to_s, SQLite3::DATE_FORMAT)
+      Time.parse_utc(self.created_at.to_s, SQLite3::DATE_FORMAT)
+      # ^^^ equivalent to vvv
+      # Time.parse_utc(self.created_at.to_s, SQLite3::DATE_FORMAT, Time::Location::UTC)
     end
 
     def add_tags(new_tags : Array(Hey::Tag)) : Event
