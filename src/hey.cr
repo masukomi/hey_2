@@ -5,9 +5,9 @@ end
 # END Handle ^C
 
 
-
 config = Hey::Config.load
-if config.needs_installation_or_upgrade?
+if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
+
   if ! config.got_db?
     STDERR.puts "Oh! I don't see a database. I think this is a new install."
   else
@@ -17,7 +17,7 @@ if config.needs_installation_or_upgrade?
   STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
   exit(1)
 end
-config.running_hey
+
 require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
 # it doesn't have the db info before loading up
@@ -93,7 +93,8 @@ parser.add_command(
   SentenceOptions::Command.new("--version",
 "  hey --version
     Outputs the current version number",
-    Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION}"; true }))
+    Proc(Array(String), Bool).new { |args| puts "Hey! Version #{Hey::VERSION} #{
+      File.exists?(Hey::Config::DEFAULT_DB_PATH)}"; true }))
 # should be last.
 parser.add_command(SentenceOptions::Command.new("--help",
 "  hey --help
