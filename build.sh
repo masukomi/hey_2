@@ -5,7 +5,11 @@ if [ "$1" != "" ]; then
   perl -pi -e "s/VERSION_NUMBER_HERE/$1/" src/hey/version.cr
 fi
 echo "building hey..."
-crystal build --release src/hey.cr
+if [ "$1" != "" ]; then
+  crystal build --release src/hey.cr
+else
+  crystal build src/hey.cr
+fi
 if [ "$1" != "" ]; then
   perl -pi -e "s/$1/VERSION_NUMBER_HERE/" src/hey/version.cr
 fi
