@@ -9,8 +9,9 @@ targets:
     main: src/hey.cr
 
 dependencies:
-  granite_orm:
-      github: amberframework/granite-orm
+  # uses forked version of granite orm
+  # granite_orm:
+  #     github: amberframework/granite-orm
   sqlite3:
     github: crystal-lang/crystal-sqlite3
   sentence_options:

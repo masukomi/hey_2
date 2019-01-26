@@ -1,4 +1,4 @@
-require "granite_orm/adapter/sqlite"
+require "../granite_orm/adapter/sqlite"
 require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
 require "../granite_orm/fields.cr"
@@ -10,11 +10,11 @@ require "crystal_fmt"
 
 module Hey
   class Event < Granite::ORM::Base
+    no_timestamps # because granite ORM can't handle sqlite timestamps
     adapter sqlite
     table_name events
     set_foreign_key event_id
     set_order_column created_at
-    no_timestamps # because granite ORM can't handle sqlite timestamps
     has_some EventPerson
     # has_many :event_persons
     # has_many :people, through: event_persons

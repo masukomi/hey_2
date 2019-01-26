@@ -4,7 +4,6 @@ Signal::INT.trap do
 end
 # END Handle ^C
 
-
 config = Hey::Config.load
 if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
 
@@ -17,7 +16,6 @@ if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--ve
   STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
   exit(1)
 end
-
 require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
 # it doesn't have the db info before loading up

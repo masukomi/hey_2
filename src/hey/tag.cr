@@ -1,4 +1,4 @@
-require "granite_orm/adapter/sqlite"
+require "../granite_orm/adapter/sqlite"
 require "../granite_orm/table.cr"
 require "../granite_orm/associations.cr"
 require "../granite_orm/querying.cr"
@@ -8,6 +8,7 @@ module Hey
     include Granite::ORM::Querying # dunno why this one needs to be included
     # but we need it for find_or_createable
     adapter sqlite
+    no_timestamps
     table_name tags
     set_foreign_key tag_id
     find_or_creatable Tag, name

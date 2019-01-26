@@ -1,6 +1,6 @@
 require "option_parser"
-require "../config.cr"
 require "sparker"
+require "../config.cr"
 config = Hey::Config.load
 require "./report.cr"
 require "../*"
