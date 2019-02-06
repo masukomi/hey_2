@@ -5,16 +5,22 @@ end
 # END Handle ^C
 
 config = Hey::Config.load
-if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
+if config.got_db?
+  if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
 
-  if ! config.got_db?
-    STDERR.puts "Oh! I don't see a database. I think this is a new install."
-  else
-    STDERR.puts "Oh, it looks like you need an upgrade!"
+    if ! config.got_db?
+    else
+      STDERR.puts "Oh, it looks like you need an upgrade!"
+    end
+    STDERR.puts "Please run the following command:"
+    STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
+    exit(1)
   end
-  STDERR.puts "Please run the following command:"
-  STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
-  exit(1)
+else
+    STDERR.puts "Oh! I don't see a database. I think this is a new install."
+    STDERR.puts "Please run the following command:"
+    STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
+    exit(1)
 end
 require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
