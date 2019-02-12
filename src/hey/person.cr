@@ -1,9 +1,4 @@
-require "../granite_orm/adapter/sqlite"
-require "../granite_orm/table.cr"
-require "../granite_orm/associations.cr"
-require "../granite_orm/querying.cr"
-
-# require "./reports/people_report.cr"
+require "granite_orm/adapter/sqlite"
 
 module Hey
   class Person < Granite::ORM::Base

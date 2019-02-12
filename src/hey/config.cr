@@ -83,10 +83,11 @@ module Hey
     end
 
     def got_db?() : Bool
-      return File.exists?(self.db_path.sub("sqlite3:", ""))
+      filesystem_db_path = self.db_path.sub("sqlite3:", "")
+      return File.exists?(filesystem_db_path)
     end
     def db_up_to_date?(version : String = get_db_version()) : Bool
-      version == Hey::VERSION
+      version == Hey::VERSION || version == "VERSION_NUMBER_HERE" # <-- dev version
       # see comment in get_db_version
     end
     def get_db_version() : String

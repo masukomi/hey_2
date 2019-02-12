@@ -5,22 +5,24 @@ end
 # END Handle ^C
 
 config = Hey::Config.load
-if config.got_db?
-  if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
+if ! ENV.has_key?("IN_SPEC_TEST") || ENV["IN_SPEC_TEST"] != "true"
+  if config.got_db?
+    if config.needs_installation_or_upgrade? && (ARGV.size == 0 ||  ARGV[0] != "--version")
 
-    if ! config.got_db?
-    else
       STDERR.puts "Oh, it looks like you need an upgrade!"
+      STDERR.puts "Please run the following command:"
+      STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
+      exit(1)
     end
-    STDERR.puts "Please run the following command:"
-    STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
-    exit(1)
+  elsif ARGV.size > 0 && ARGV[0] == "--version"
+    puts "Hey! Version #{Hey::VERSION}"
+    exit(0)
+  else
+      STDERR.puts "Oh! I don't see a database. I think this is a new install."
+      STDERR.puts "Please run the following command:"
+      STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
+      exit(1)
   end
-else
-    STDERR.puts "Oh! I don't see a database. I think this is a new install."
-    STDERR.puts "Please run the following command:"
-    STDERR.puts "curl -s https://interrupttracker.com/installers/db_setup.sh | sh"
-    exit(1)
 end
 require "./hey/*" # no it doesn't make sense to require after using
 # but the other way around doesn't work because
@@ -121,18 +123,3 @@ if !ENV.has_key? "IN_SPEC_TEST"
 
 end
 
-# def process_command(*args)
-# 	if args.size > 0
-# 		command = args.shift
-# 		case command
-# 		when "comment"
-# 			comment(args[1], args[2..-1].join(" "))
-# 		when "graph"
-# 			graph(args[1..-1])
-# 		else
-# 			STDERR.puts("Unknown command #{command}")
-# 		end
-# 	else
-# 		list_events()
-# 	end
-# end

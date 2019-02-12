@@ -12,13 +12,17 @@ shards:
     github: crystal-lang/crystal-db
     version: 0.5.1
 
+  granite_orm:
+    path: ~/workspace/granite-orm
+    version: 0
+
   sentence_options:
     github: masukomi/sentence_options
     commit: 82551e4c4a8db6c9ac1d0f227c9b9ce34fedfcae
 
   sparker:
     github: masukomi/sparker
-    version: 0.5.0
+    version: 0.5.1
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3

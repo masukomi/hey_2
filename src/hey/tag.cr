@@ -1,7 +1,4 @@
-require "../granite_orm/adapter/sqlite"
-require "../granite_orm/table.cr"
-require "../granite_orm/associations.cr"
-require "../granite_orm/querying.cr"
+require "granite_orm/adapter/sqlite"
 
 module Hey
   class Tag < Granite::ORM::Base

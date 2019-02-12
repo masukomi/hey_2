@@ -4,7 +4,6 @@ require "../config.cr"
 config = Hey::Config.load
 require "./report.cr"
 require "../*"
-require "../../granite_orm/querying.cr"
 require "crystal_fmt"
 
 module Hey
