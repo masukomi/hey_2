@@ -1,7 +1,7 @@
 #!/bin/sh
 VERSION="dev_version"
 if [ "$1" != "" ]; then
-  VERSION=$1
+  VERSION=$(echo "$1" | sed -e "s/^v//")
   perl -pi -e "s/VERSION_NUMBER_HERE/$1/" src/hey/version.cr
 fi
 echo "building hey..."
