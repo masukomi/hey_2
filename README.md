@@ -131,7 +131,7 @@ with.
 
 Note that the "Recent Activity" column is a tiny graph of activity by day. If you
 were being regularly asked questions by the same person throughout the past 14
-days it might look like `▁▃▂.▇..▄▅▂▆.▁.` The periods are days without questions.
+days it might look like `▁▃▂.▇..▄▅▂▆.▁.` The dots are days without interruptions.
 
 ```
 $ hey report people_overview
@@ -151,7 +151,7 @@ People, 14 days of activity, & tags
 The interrupts by hour report is useful for helping to plan your day. In my case
 I should avoid meetings between 11 AM and 3 PM (1100-1500) because its the time
 when I most need to be available. Conversely, if there's something I _really_
-need to focus on without interruptions I should be sure to make myself
+need to focus on without interruptions I should be sure to let people know I'm
 unavailable during those hours.
 
 ```
@@ -232,6 +232,10 @@ intended to do.
 
 Once you've created your report just put it in this directory: 
 `~/.config/hey/reports/` and Hey! will take care of the rest.
+
+You can find the latest version of the database schema at
+`starter_files/hey.db.sql`
+
 
 
 ## Contributing
