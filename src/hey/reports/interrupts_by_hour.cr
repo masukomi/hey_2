@@ -41,7 +41,7 @@ order by hour asc;"
         counts = Array(Int32).new
         last_hour = -1
         Event.query(query) do |rs|
-          # Event is irrelevent. It's just a subclass of Granite
+          # Event is irrelevent. It's just a subclass of Sandstone
           # with all the stuff set up
           rs.each do
             hour = rs.read(String)

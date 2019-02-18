@@ -1,8 +1,8 @@
-require "granite_orm/adapter/sqlite"
+require "sandstone/adapter/sqlite"
 
 module Hey
-  class Person < Granite::ORM::Base
-    include Granite::ORM::Querying # dunno why this one needs to be included
+  class Person < Sandstone::ORM::Base
+    include Sandstone::ORM::Querying # dunno why this one needs to be included
     adapter sqlite
     table_name people
     set_foreign_key person_id

@@ -1,10 +1,10 @@
-require "granite_orm/adapter/sqlite"
-# require "../granite_orm/adapter/sqlite.cr"
+require "sandstone/adapter/sqlite"
+# require "../sandstone/adapter/sqlite.cr"
 require "sqlite3"
 require "crystal_fmt"
 
 module Hey
-  class Event < Granite::ORM::Base
+  class Event < Sandstone::ORM::Base
     no_timestamps # because granite ORM can't handle sqlite timestamps
     adapter sqlite
     table_name events

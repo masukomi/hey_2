@@ -11,7 +11,7 @@ module Hey
     class PeopleReport < Hey::Reports::Report
       include Sparkline
       include Hey
-      include Granite::ORM::Querying # dunno why this one needs to be included
+      include Sandstone::ORM::Querying # dunno why this one needs to be included
       MAX_AGE_IN_DAYS=14
 
       getter :name, :description, :db_version, :location

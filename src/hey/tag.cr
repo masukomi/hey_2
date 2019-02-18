@@ -1,8 +1,8 @@
-require "granite_orm/adapter/sqlite"
+require "sandstone/adapter/sqlite"
 
 module Hey
-  class Tag < Granite::ORM::Base
-    include Granite::ORM::Querying # dunno why this one needs to be included
+  class Tag < Sandstone::ORM::Base
+    include Sandstone::ORM::Querying # dunno why this one needs to be included
     # but we need it for find_or_createable
     adapter sqlite
     no_timestamps

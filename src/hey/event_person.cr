@@ -1,7 +1,7 @@
-require "granite_orm/adapter/sqlite"
+require "sandstone/adapter/sqlite"
 
 module Hey
-  class EventPerson < Granite::ORM::Base
+  class EventPerson < Sandstone::ORM::Base
     adapter sqlite
     table_name events_people
     field event_id : Int64
