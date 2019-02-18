@@ -22,6 +22,7 @@ dependencies:
     github: masukomi/sparker
   crystal_cli_graph:
     github: masukomi/crystal_cli_graph
+    version: 0.1.1
 
 
 
