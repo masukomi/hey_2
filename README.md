@@ -246,6 +246,10 @@ You can find the latest version of the database schema at
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request
 
+NOTE: due to a bug in (Shards 0.8.1 (2019-02-05)) which is distributed in 
+Crystal v0.27.0 you will need to change the shards.yml to require 
+sandstone via a local path.
+
 ## Contributors
 
 - [[your-github-name]](https://github.com/[your-github-name]) masukomi - creator, maintainer
