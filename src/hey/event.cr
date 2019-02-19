@@ -69,7 +69,7 @@ module Hey
       end
     end
 
-    def set_created_at(t : Time = Time.now) : Event
+    def set_created_at(t : Time = Time.utc_now) : Event
       # 2017-05-26 17:33:08
       self.created_at = t.to_s(SQLite3::DATE_FORMAT)
       self
