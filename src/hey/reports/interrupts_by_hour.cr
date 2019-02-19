@@ -39,6 +39,7 @@ group by 1
 order by hour asc;"
         hours = Array(String).new
         counts = Array(Int32).new
+        # paired arrays ^^^ hour[0] has count[0] interrupts
         last_hour = -1
         Event.query(query) do |rs|
           # Event is irrelevent. It's just a subclass of Sandstone
@@ -51,11 +52,12 @@ order by hour asc;"
               hours.push hour
               counts.push count
             else
-              while hour_i > last_hour
-                hour_i = last_hour + 1
-                hours.push(hour_i > 9 ? hour_i.to_s : "0#{hour_i}")
+              temp_hour_i = last_hour
+              while hour_i > temp_hour_i + 1
+                temp_hour_i = last_hour + 1
+                hours.push(temp_hour_i > 9 ? temp_hour_i.to_s : "0#{temp_hour_i}")
                 counts.push 0
-                last_hour = hour_i
+                last_hour = temp_hour_i
               end
               hours.push hour
               counts.push count
@@ -67,7 +69,7 @@ order by hour asc;"
           #should only happen if run on a new database
           return interrupt_free_hours_and_counts()
         end
-        return hours, counts
+        return {hours, counts}
       end
       def interrupt_free_hours_and_counts() : Tuple(Array(String), Array(Int32))
         hours = Array(String).new
@@ -107,14 +109,12 @@ end
 #         report = Hey::Reports::InterruptsByHour.new
 #         report.run
 #       else
-#         STDERR.puts("unable to find db at #{path}")
 #         exit 1
 #       end
 #     }
 #   end
 #   parser.parse(ARGV)
 #   if !handled
-#     STDERR.puts("Arguments didn't provide expected data")
 #     puts parser
 #   end
 # end
