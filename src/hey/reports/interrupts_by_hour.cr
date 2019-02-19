@@ -52,13 +52,19 @@ order by hour asc;"
               hours.push hour
               counts.push count
             else
-              temp_hour_i = last_hour
-              while hour_i > temp_hour_i + 1
-                temp_hour_i = last_hour + 1
-                hours.push(temp_hour_i > 9 ? temp_hour_i.to_s : "0#{temp_hour_i}")
-                counts.push 0
-                last_hour = temp_hour_i
-              end
+              hours, counts = fill_hours_and_counts(last_hour,
+                                                   hour_i,
+                                                   hours,
+                                                   counts)
+
+              last_hour = hour_i
+              # temp_hour_i = last_hour
+              # while hour_i > temp_hour_i + 1
+              #   temp_hour_i = last_hour + 1
+              #   hours.push(temp_hour_i > 9 ? temp_hour_i.to_s : "0#{temp_hour_i}")
+              #   counts.push 0
+              #   last_hour = temp_hour_i
+              # end
               hours.push hour
               counts.push count
             end
@@ -68,6 +74,13 @@ order by hour asc;"
         if hours.size == 0
           #should only happen if run on a new database
           return interrupt_free_hours_and_counts()
+        end
+        if hours.size < 24
+          hours, counts = fill_hours_and_counts(hours.size - 1,
+                                                24,
+                                                hours,
+                                                counts)
+        else
         end
         return {hours, counts}
       end
@@ -79,6 +92,18 @@ order by hour asc;"
           counts.push(0)
         end
         return hours, counts
+      end
+      def fill_hours_and_counts(from : Int32, to : Int32, 
+                      hours : Array(String),
+                      counts : Array(Int32)) Tuple(Array(String), Array(Int32))
+        temp_hour = from
+        while to > temp_hour + 1
+          temp_hour = from + 1
+          hours.push(temp_hour > 9 ? temp_hour.to_s : "0#{temp_hour}")
+          counts.push 0
+          from = temp_hour
+        end
+        return {hours, counts}
       end
     end
   end
