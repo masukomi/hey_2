@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LATEST_VERSION="2.0.0"
+LATEST_VERSION="2.0.0-a2"
 which hey > /dev/null
 if [ $? -ne 0 ]; then
 	echo "Hey! doesn't appear to be installed."
