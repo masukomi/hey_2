@@ -39,6 +39,7 @@ if [ "$db_sha" != "88fe5ed82c33da62bbd9790722e0ff025da96a906aa20b761b94d307d1966
   echo "You must:"
   echo " * upload the updated hey.db to the starer_files dir"
   echo " * update the sha in db_setup.sh to $sha"
+  echo " * update the version number in db_setup.sh to $VERSION"
   echo " * upload the updated db_setup.sh"
   echo " * create/update and upload the db upgrade script"
   echo " * update the sha in build.sh once all of that has been done"
