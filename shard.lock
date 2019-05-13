@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crystal_cli_graph:
     github: masukomi/crystal_cli_graph
-    version: 0.1.1
+    version: 1.0.0
 
   crystal_fmt:
     github: masukomi/crystal_fmt
@@ -18,7 +18,7 @@ shards:
 
   sentence_options:
     github: masukomi/sentence_options
-    version: HEAD
+    commit: 82551e4c4a8db6c9ac1d0f227c9b9ce34fedfcae
 
   sparker:
     github: masukomi/sparker
@@ -26,5 +26,5 @@ shards:
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    version: 0.10.0
+    version: 0.11.0
 
