@@ -80,6 +80,7 @@ that they must not contain any spaces.
 Shows you the most recent interruptions. Defaults to 25.
 
 ```
+$ hey list
 Last 25 interruptions in chronological order...
 
  | ID  | When                | Who       | Tags               |
@@ -143,6 +144,7 @@ People, 14 days of activity, & tags
 | thomas  | ܂܂܂܂܂܂܂܂܂܂▅܂܂܂܂ | question, tl, request   |
 | john    | ܂܂▂܂܂܂܂܂܂܂܂܂܂܂܂ | question                |
 | cartman | ܂܂܂܂܂܂▃܂܂܂܂܂܂܂܂ | request                 |
+
 ```
 
 
@@ -158,20 +160,20 @@ unavailable during those hours.
 $ hey report interrupts_by_hour
 Interrupts By Hour:
 
-                                          o
-                                          |
-                                 o     o  |
-                                 |     |  |
-                                 |     |  |     o
-                           o     |     |  |  o  |
-                           |     |     |  |  |  |
-                           |     |     |  |  |  |
-                           |  o  |     |  |  |  |
-                           |  |  |     |  |  |  |
-                           |  |  |     |  |  |  |
-                           |  |  |     |  |  |  |
-                           |  |  |     |  |  |  |
-o  o  o  o  o  o  o  o  o  |  |  |  o  |  |  |  |  o  o  o
+                                          ▁
+                                          █
+                                 ▁     ▁  █
+                                 █     █  █
+                                 █     █  █     ▁
+                           ▁     █     █  █  ▁  █
+                           █     █     █  █  █  █
+                           █     █     █  █  █  █
+                           █  ▁  █     █  █  █  █
+                           █  █  █     █  █  █  █
+                           █  █  █     █  █  █  █
+                           █  █  █     █  █  █  █
+                           █  █  █     █  █  █  █
+▁  ▁  ▁  ▁  ▁  ▁  ▁  ▁  ▁  █  █  █  ▁  █  █  █  █  ▁  ▁  ▁
 00 01 02 03 04 05 07 07 08 09 10 11 12 13 14 15 16 17 18 23
 ```
 
@@ -252,4 +254,4 @@ sandstone via a local path.
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) masukomi - creator, maintainer
+- [masukomi](https://github.com/masukomi) masukomi - creator, maintainer
